@@ -10,7 +10,7 @@
 // 4 RAINBOW-RALPHING CAT
 // 4 HAIRY POTATO CAT
 // 5 NOPE
-// 6 - players DEFUSE
+// 6 - players DEFUSE (YOU DON'T ADD DEFUSES TO THE DECK) - only 1 in deck
 // players - 1 EXPLODNG KITTENS
 
 int add_cards(char ** deck, char * card_name, int amount, int pos){
@@ -20,7 +20,7 @@ int add_cards(char ** deck, char * card_name, int amount, int pos){
 
 char ** create_deck(int players, int * deck_size) {
   int pos = 0;
-  *deck_size = 38 + (6 - players) + (players - 1);
+  *deck_size = 38 + (players - 1);
   char ** deck = calloc(*deck_size, sizeof(char *));
 
   pos = add_cards(deck, "Attack", 4, pos);
@@ -32,7 +32,7 @@ char ** create_deck(int players, int * deck_size) {
   pos = add_cards(deck, "Rainbow-ralphing Cat", 4, pos);
   pos = add_cards(deck, "Hairy Potato Cat", 4, pos);
   pos = add_cards(deck, "Nope", 5, pos);
-  pos = add_cards(deck, "Defuse", 6 - players, pos);
+  pos = add_cards(deck, "Defuse", 1, pos);
   pos = add_cards(deck, "Exploding Kitten", players - 1, pos);
 
   return deck;
