@@ -1,0 +1,167 @@
+﻿Implosion
+Project 2 - The Final Frontier
+Jen Yu, Adeebur Rahman, Marcus Ng
+Systems Period 10
+2017-12-22
+
+
+Description
+Exploding Kittens is a card game where your goal is to be the last person alive. If you draw an exploding kitten card, you die unless you have a defuse card. Defusing an exploding kitten allows you to place the exploding kitten anywhere in the deck. Players use their action cards to avoid the exploding kittens and cat cards to steal cards from each other. In the beginning of the game, each player receives five cards, including one defuse card. The number of exploding kittens in the deck is one less than the number of players. At the end of each player’s turn, they must draw a card from the deck unless they use an action card that states otherwise.
+
+
+Cards
+Exploding Kitten
+If the player has a “Defuse,” then he or she discards the “Defuse” and places the exploding kitten anywhere in the deck.
+If the player who draws this card does not have a “Defuse,” then he or she dies and discards his or her entire hand. The exploding kitten does not go back into the deck.
+
+
+Defuse
+If the player has a “Defuse,” then he or she discards the “Defuse” and places the exploding kitten anywhere in the deck.
+        Defusing cannot be “Noped.”
+
+
+Attack (ACTION)
+Using “Attack” skips your turn (you don’t draw a card) and forces the next player to play two turns.
+
+
+Favor (ACTION)
+Using “Favor” allows you to pick a player to give you any card of their choosing from their hand.        
+
+
+Nope (ACTION)
+        After any player plays an action card, you are able to NOPE them to cancel the action.
+        You can negate a NOPE with another NOPE to execute the previously NOPED action.
+        It does not have to be your turn to play a “Nope” card.
+        Combos can be NOPED
+        You cannot NOPE an exploding kitten or defuse.
+
+
+See The Future (ACTION)
+        Using “See The Future” allows you peek at the top 3 cards of the deck.
+
+
+Shuffle (ACTION)
+        Using “Shuffle” shuffles the deck.
+
+
+Skip (ACTION)
+        Using “Skip” skips your turn.
+
+
+Tacocat, Rainbow-ralphing Cat, Hairy Potato Cat (CAT CARDS)
+        These three cards have no special instructions like action cards.
+        They are used in combos.
+
+
+Combos
+Two of a kind (any card)
+The player discards two of a kind to pick a player to steal a card from. The player randomly steals a card from the other player’s hand.
+
+
+Three of a kind (any card)
+        The player discards three of a kind and requests a specific card (ex: Defuse) from another player. If the chosen player has the requested card, then he or she must gives the player the card. If the chosen player does not have the requested card, then he or she does not give the player anything. 
+
+
+User Interface
+One player will host the server that other players can connect to.
+
+
+During each player’s turn, he or she will be able to play cards by specifying the index of the card in their hand they want to play. (Indices assigned when cards displayed in interface) 
+
+
+After an ACTION card is played, players will be prompted that they have 3 seconds to play a “Nope” card. If a “Nope” card is played, then other players will have another 3 seconds to negate the “Nope” card. These can be chained, and further description is provided below. 
+
+
+When a player loses, they will not be able to play any of their cards, but will be able to spectate the game.
+
+
+Topics
+**Note**: The client file will be very light, essentially all actions taken by the client will be pushed onto the server, and the server modifies files/client’s data as necessary. 
+Working with files
+There will be three files: 
+Base: all cards, unshuffled. 
+CRYPTED - Draw Pile: Initially includes all cards except for Defuses (distributed to players) and has been shuffled. (shuffled from copy of Base file)
+Server takes cards from this pile during the game and places it in the Draw shm
+A semaphore with 1-limit always held by server to prevent the local client from accessing the file 
+Card Pile: blank initially, five cards inserted (plus a Defuse card) when game begins
+As a player draws/uses cards, the file is modified by the server
+Local file, modified by server but not viewable by other players, different for each player
+Semaphores
+The server holds a semaphore in order to draw from the draw pile or to play into the play pile. 
+This prevents the player who is running both the server and the player from accessing the draw/play piles whenever she/he wants
+
+
+Networking
+Players will be playing on different machines, so networking will allow them to communicate with one another. 
+
+
+One person will be running both a player and a server file, all players will connect to the same server. 
+
+
+Server does all of the heavy lifting: players transmit to the server the action they want to undertake (drawing/playing an ACTION card) and the server modifies the draw pile or the play pile in accordance to the client’s action. Then, the server transmits the information back (if card drawed, transmits card data back; if action taken, server transmits action to the targeted player) 
+
+
+After any player’s turn, the server transmits a message to all player informing them of what action the player took (e.g. Player 1 drew a card from the deck!  or Player 2 played a Nope card.)
+
+
+Server keeps track of player order: 
+Normal: sets order with pid, checks if right player is communicating.
+After card is played, period of time when anyone can connect to server and play a Nope card, but after action taken, original player order resumed
+Reverse card played: reverse the pid orders
+Attack card played: prevents next player from disconnecting until two moves made
+
+
+Processes
+To start a game, a server needs to be started and that is a single process. Since players will be playing on different machines connecting to this server, each player will also be running a single process of their own client.
+
+
+Signals
+When dealing with signals it is only necessary to account for SIGINT since the other signals will never come into play. We will treat SIGINT as a forfeit mechanism removing them from the game.
+
+
+Shared memory
+Play Pile: Initially has no cards, the pile that the last 2 played cards will be placed in. 
+Used for the server to take the played action. 
+A semaphore with 1-limit will be needed in order to play. 
+A player puts down a card. There is a three second time period where another player can grab the semaphore just released in order to play a ‘Nope’ card. There is also a three second time period after this play (as with every play. ) 
+Shm segment only stores max two cards at a time
+STACK NATURE: The following situations are applicable only to the three second time period after a player plays an ACTION card. (normal turns not included.) 
+1st scenario: ACTION card played. No “Nope.” After three second period, the server undertakes the ACTION specified. 
+2nd scenario: ACTION card played. “Nope” is played. No more “Nopes” are played. The server sees that a “Nope” was played last, and takes no action. 
+3rd scenario: ACTION card played. “Nope” is played. Someone plays another “Nope”, essentially Noping the nope. When the game enters the play pile, and sees that there is already a Nope card on top, it pops off the Nope card instead of placing another card. Now, there is only the ACTION card left in the play pile. All scenarios listed above still apply if anyone else wants to “Nope” again. 
+Normal turns: Player who has the next turn has the semaphore for both the draw pile and the play pile, and must either draw or put down an ACTION card. 
+If no Nopes occur (or if all Nopes are Noped, thus removing it from the shm) then there will only be an ACTION card in the play pile, and the server will execute the ACTION 
+Once ACTION is executed, the play pile is emptied. 
+
+
+Draw (Top Three): 
+A shared memory segment with only the top three cards from the deck 
+Makes shuffling the top three cards/viewing the top three cards (two ACTION cards) simpler
+When a card is drawn, the next card is moved from the Drawpile file into this shm by the server
+
+
+Responsibilities
+Adeeb- Networking & Client file
+Jen- Server interactions with players
+Marcus- Server implementations of ACTION cards
+
+
+Timeline
+(Assuming project is due 1/16) 
+
+01/05: 
+MVP done
+Server connects to four clients on different machines 
+Use networking learned in class
+Basic action cards excluding Nope and no combos
+Rudimentary interface (no ASCII graphics or updates from server)
+
+01/10: 
+Implementation of Nope 
+Implementation of combo cards
+Commands to get description of action cards, or view your hand
+Server provides updates
+
+01/12: 
+Add graphics and start page (Cat ASCII) 
+DEBUG!
