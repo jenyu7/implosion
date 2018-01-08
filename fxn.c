@@ -40,9 +40,7 @@ char ** create_deck(int players, int * deck_size) {
 
 void print_deck(char ** deck, int size) {
   int i;
-  for(i = 0; i < size; i++) {
-      printf("%s\n", deck[i]);
-  }
+  for(i = 0; i < size; i++) printf("%s\n", deck[i]);
 }
 
 int main() {
