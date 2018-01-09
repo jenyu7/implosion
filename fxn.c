@@ -1,18 +1,5 @@
 #include "header.h"
 
-// Deck
-// 4 ATTACK
-// 4 SKIP
-// 4 FAVOR
-// 4 SHUFFLE
-// 5 SEE THE FUTURE
-// 4 TACOCAT
-// 4 RAINBOW-RALPHING CAT
-// 4 HAIRY POTATO CAT
-// 5 NOPE
-// 6 - players = DEFUSE
-// players - 1 EXPLODNG KITTENS
-
 int add_cards(char ** deck, char * card_name, int amount, int pos){
   for(;amount-->0;) deck[pos++] = card_name;
   return pos;
@@ -47,21 +34,13 @@ void print_deck(char ** deck, int size) {
   }
 }
 
-void swap(char * a, char * b) {
-  char tmp = *a;
-  *a = *b;
-  *b = tmp;
-}
-
-void shuffle(char ** deck, int size) {
-  srand(time(NULL));
-  int r = rand();
-  int i, j;
-  for (i = 0; i < 10; i++) {
-    for (j = 0; j < size; j++) {
-      int pos = rand() % size;
-      swap(&deck[i], &deck[pos]);
-    }
+void shuffle ( char ** deck, int size ) {
+  srand ( time(NULL) );
+  for (; size-- > 1;) {
+    int i = rand() % (size+1);
+    char * tmp = deck[i];
+    deck[i] = deck[size];
+    deck[size] = tmp;
   }
 }
 
@@ -76,14 +55,18 @@ void see_the_future(char ** deck) {
 int main() {
 
   int size;
+
+  printf("\nCreating Deck\n");
   char ** deck = create_deck(2, &size);
   print_deck(deck, size);
-  
+
+  printf("\nShuffling Deck\n");
   shuffle(deck, size);
-  
-  see_the_future(deck);
   print_deck(deck, size);
-  
+
+  printf("\nTesting See The Future\n");
+  see_the_future(deck);
+
   free(deck);
   return 0;
 

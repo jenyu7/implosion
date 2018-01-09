@@ -1,6 +1,12 @@
 ngM -- 2018-01-07 20:26:37
 create_deck pos segfault
 
+rahmanA -- 2018-01-07 23:56:42
+fixed deck creation
+
 ngM -- 2018-01-08 20:07:52
 added shuffle and see the future
+
+rahmanA -- 2018-01-08 20:45:45
+fixed shuffle
 
