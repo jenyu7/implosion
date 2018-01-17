@@ -26,7 +26,7 @@ int server_setup() {
 
   //setup structs for getaddrinfo
   struct addrinfo * hints, * results;
-  hints = (struct addrinfo *)calloc(1, sizeof(struct addrinfo));
+  hints = calloc(1, sizeof(struct addrinfo));
   hints->ai_family = AF_INET;  //IPv4 address
   hints->ai_socktype = SOCK_STREAM;  //TCP socket
   hints->ai_flags = AI_PASSIVE;  //Use all valid addresses
@@ -60,15 +60,13 @@ int server_setup() {
   to the client.
   =========================*/
 int server_connect(int sd) {
-  int client_socket;
+  int to_client;
   socklen_t sock_size;
-  struct sockaddr_storage client_address;
+  struct sockaddr_storage client_socket;
 
-  client_socket = accept(sd, (struct sockaddr *)&client_address, &sock_size);
-  error_check(client_socket, "server accept");
+  to_client = accept(sd, (struct sockaddr *)&client_socket, &sock_size);
 
-
-  return client_socket;
+  return to_client;
 }
 
 /*=========================
@@ -93,7 +91,7 @@ int client_setup(char * server) {
   /* hints->ai_flags not needed because the client
      specifies the desired address. */
   struct addrinfo * hints, * results;
-  hints = (struct addrinfo *)calloc(1, sizeof(struct addrinfo));
+  hints = calloc(1, sizeof(struct addrinfo));
   hints->ai_family = AF_INET;  //IPv4
   hints->ai_socktype = SOCK_STREAM;  //TCP socket
   getaddrinfo(server, PORT, hints, &results);
@@ -101,7 +99,7 @@ int client_setup(char * server) {
   //connect to the server
   //connect will bind the socket for us
   i = connect( sd, results->ai_addr, results->ai_addrlen );
-  error_check( i, "client connect" );
+  error_check( 1, "client connect" );
 
   free(hints);
   freeaddrinfo(results);
