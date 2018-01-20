@@ -70,3 +70,6 @@ ehthumbs.db
 
 # Filenames with special characters
 **/*[\\/\:;*?!'"<>|$º•¶§∞¢£]*
+
+client
+server
