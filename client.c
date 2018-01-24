@@ -3,6 +3,7 @@
 int main(int argc, char **argv) {
 
   int server_socket, player_number;
+  int fd;
   char buffer[BUFFER_SIZE];
 
   if (argc == 2)
@@ -19,6 +20,10 @@ int main(int argc, char **argv) {
     while (1) {
       read(server_socket, buffer, sizeof(buffer));
       if (strcmp(buffer, ACK)) {
+	if(!strncmp(buffer, "add", 3)){
+	  fd = open("hand", O_RDWR | O_APPEND);
+	  write(fd,&buffer[3], sizeof(buffer)-3);
+	}
         printf("received: [%s]\n", buffer);
       }
       else break;
