@@ -65,7 +65,7 @@ void parse_command(char cmd[], int i, char ** deck, int size, int players[])
     {
       char card[8];
       printf("drawing...\n");
-      draw_card(deck, size, card);
+      strcpy(card, draw_card(deck, &size));
       write(players[i], card, sizeof(card));
       sprintf(cmd, "Player %d drew a card.", i);
     }

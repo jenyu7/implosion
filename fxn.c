@@ -63,30 +63,30 @@ void insert_card(char ** deck, int * size, char * card, int pos) {
   deck[pos] = card;
 }
 
-int main() {
+/* int main() { */
 
-  int size;
+/*   int size; */
 
-  printf("\nCreating Deck\n");
-  char ** deck = create_deck(2, &size);
-  print_deck(deck, size);
+/*   printf("\nCreating Deck\n"); */
+/*   char ** deck = create_deck(2, &size); */
+/*   print_deck(deck, size); */
 
-  printf("\nShuffling Deck\n");
-  shuffle(deck, size);
-  print_deck(deck, size);
+/*   printf("\nShuffling Deck\n"); */
+/*   shuffle(deck, size); */
+/*   print_deck(deck, size); */
 
-  printf("\nTesting See The Future\n");
-  see_the_future(deck);
+/*   printf("\nTesting See The Future\n"); */
+/*   see_the_future(deck); */
 
-  printf("\nTesting draw_card\n");
-  printf("Drew the card \"%s\"\n", draw_card(deck, &size));
-  print_deck(deck,size);
+/*   printf("\nTesting draw_card\n"); */
+/*   printf("Drew the card \"%s\"\n", draw_card(deck, &size)); */
+/*   print_deck(deck,size); */
 
-  printf("\nTesting insert_card\n");
-  insert_card(deck, &size, "THIS_CARD_WAS_INSERTED_______", 5);
-  print_deck(deck,size);
+/*   printf("\nTesting insert_card\n"); */
+/*   insert_card(deck, &size, "THIS_CARD_WAS_INSERTED_______", 5); */
+/*   print_deck(deck,size); */
 
-  free(deck);
-  return 0;
+/*   free(deck); */
+/*   return 0; */
 
-}
+/* } */
