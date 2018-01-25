@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
   printf("\nCreating Deck\n");
   char ** deck = create_deck(2, &size);
 
-  printf("\nShuffling Deck\n");
+  printf("\nShuffling Deck\n\n");
   shuffle(deck, size);
   
   while(1) {
@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
       write(players[i], ACK, sizeof(ACK));
       read(players[i], buffer, sizeof(buffer));
       parse_command(buffer, i, deck, size, players);
-      printf("buffer: %s\n", buffer);
+      printf("%s\n", buffer);
       for (j = 0; j < num_players; j++) write(players[j], buffer, sizeof(buffer));
     }
   }
@@ -63,11 +63,11 @@ void parse_command(char cmd[], int i, char ** deck, int size, int players[])
   //printf("%d\n", strcmp(cmd, "draw"));
   if(!strcmp(cmd, "draw"))
     {
-      char card[8];
+      char card[16];
       printf("drawing...\n");
       strcpy(card, draw_card(deck, &size));
       write(players[i], card, sizeof(card));
-      sprintf(cmd, "Player %d drew a card.", i);
+      sprintf(cmd, "[msg]:Player %d drew a card.", i);
     }
   else
     {
