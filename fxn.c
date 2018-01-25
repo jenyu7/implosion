@@ -60,7 +60,7 @@ char * draw_card(char ** deck, int * size) {
 
 void insert_card(char ** deck, int * size, char * card, int pos) {
   memmove(&deck[pos+1], &deck[pos], ((*size)++ - pos) * sizeof(char *));
-  deck[5] = card;
+  deck[pos] = card;
 }
 
 int main() {
