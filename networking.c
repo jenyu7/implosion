@@ -22,6 +22,10 @@ int server_setup() {
   //create the socket
   sd = socket( AF_INET, SOCK_STREAM, 0 );
   error_check( sd, "server socket" );
+  int option = 1;
+  sd = socket(AF_INET, SOCK_STREAM, 0);
+  setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
+  error_check( sd, "server socket" );
   printf("[server] socket created\n");
 
   //setup structs for getaddrinfo

@@ -30,3 +30,6 @@ card only printed for player
 adeeburR -- 2018-01-24 23:34:58
 fixed draw_card and insert_card
 
+adeeburR -- 2018-01-25 00:07:57
+fixed issue with server binding
+
