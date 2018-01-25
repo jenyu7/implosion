@@ -1,8 +1,7 @@
 #include "networking.h"
+#include "fxn.c"
 
-void parse_command(char s[], int i);
-char * trim(char *c);
-  void strip_newline( char *str );
+void parse_command(char cmd[], int i, char ** deck, int size, int players[]);
 
 int main(int argc, char **argv) {
   int num_players = 0;
@@ -30,28 +29,44 @@ int main(int argc, char **argv) {
   }
   printf("Server is no longer accepting players.\n");
   shutdown(listen_socket, SHUT_RD);
+
+  //set up players
   char buffer[BUFFER_SIZE];
   for (i = 0; i < num_players; i++) {
     snprintf(buffer, sizeof(buffer), "You are player #%d.", i);
     write(players[i], buffer, sizeof(buffer));
   }
+
+  //set up deck
+  int size;
+
+  printf("\nCreating Deck\n");
+  char ** deck = create_deck(2, &size);
+
+  printf("\nShuffling Deck\n");
+  shuffle(deck, size);
+  
   while(1) {
     for (i = 0; i < num_players; i++) {
       write(players[i], ACK, sizeof(ACK));
       read(players[i], buffer, sizeof(buffer));
-      parse_command(buffer, i);
+      parse_command(buffer, i, deck, size, players);
       printf("buffer: %s\n", buffer);
       for (j = 0; j < num_players; j++) write(players[j], buffer, sizeof(buffer));
     }
   }
 }
 
-void parse_command(char cmd[], int i)
+//does stuff based on command used
+void parse_command(char cmd[], int i, char ** deck, int size, int players[])
 {
   //printf("%d\n", strcmp(cmd, "draw"));
   if(!strcmp(cmd, "draw"))
     {
+      char card[8];
       printf("drawing...\n");
+      draw_card(deck, size, card);
+      write(players[i], card, sizeof(card));
       sprintf(cmd, "Player %d drew a card.", i);
     }
   else
@@ -60,37 +75,3 @@ void parse_command(char cmd[], int i)
     }
 }
 
-void strip_newline( char *str ) {
-  *strrchr(str, '\n') = 0;
-}
-
-char * trim(char *c) {
-  char * e = c + strlen(c) - 1;
-  while(*c && isspace(*c)) c++;
-  while(e > c && isspace(*e)) *e-- = '\0';
-  return c;
-}
-
-//useless fxns
-void process(char * s) {
-  while (*s) {
-    if (*s >= 'a' && *s <= 'z')
-      *s = ((*s - 'a') + 13) % 26 + 'a';
-    else  if (*s >= 'A' && *s <= 'Z')
-      *s = ((*s - 'a') + 13) % 26 + 'a';
-    s++;
-  }
-}
-
-void subserver(int client_socket) {
-  char buffer[BUFFER_SIZE];
-
-  while (read(client_socket, buffer, sizeof(buffer))) {
-
-    printf("[subserver %d] received: [%s]\n", getpid(), buffer);
-    process(buffer);
-    write(client_socket, buffer, sizeof(buffer));
-  }//end read loop
-  close(client_socket);
-  exit(0);
-}
