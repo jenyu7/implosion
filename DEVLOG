@@ -13,6 +13,16 @@ fixed shuffle
 adeeburR -- 2018-01-20 17:19:08
 added client server communication
 
+jenY -- 2018-01-23 18:05:06
+working on drawing cards
+
 marcusN -- 2018-01-24 13:04:27
 draw_card, insert_card
 
+jenY -- 2018-01-24 21:58:04
+fixed segfault error
+messages personalized for each player
+
+jenY -- 2018-01-24 23:13
+integrating deck functions into server.c
+card only printed for player
