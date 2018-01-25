@@ -1,19 +1,25 @@
 all: client server
 
 server: server.o networking.o
-	gcc -o server server.o networking.o
+	gcc -g -o server server.o networking.o
 
 client: client.o networking.o
-	gcc -o client client.o networking.o
+	gcc -g -o client client.o networking.o
 
 client.o: client.c networking.h
-	gcc -c client.c
+	gcc -g -c client.c
 
 server.o: server.c networking.h
-	gcc -c server.c
+	gcc -g -c server.c
 
 networking.o: networking.c networking.h
-	gcc -c networking.c
+	gcc -g -c networking.c
+
+run: fxn
+	./fxn
+
+fxn: fxn.c
+	gcc -g -o fxn fxn.c
 
 clean:
 	rm *.o

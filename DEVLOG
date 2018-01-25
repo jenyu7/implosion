@@ -26,3 +26,7 @@ messages personalized for each player
 jenY -- 2018-01-24 23:13
 integrating deck functions into server.c
 card only printed for player
+
+adeeburR -- 2018-01-24 23:34:58
+fixed draw_card and insert_card
+

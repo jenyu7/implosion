@@ -51,24 +51,16 @@ void see_the_future(char ** deck) {
   }
 }
 
-void draw_card(char ** deck, int size) {
-  int i;
-  for (i = 0; i < size; i++) {
-    if (i == 0) {
-      printf("Draw carding: %s... do some player stuff\n", deck[i]);
-    } else {
-      deck[i-1] = deck[i];
-    }
-  }
-  deck[size-1] = NULL;
+char * draw_card(char ** deck, int * size) {
+  char * ret = deck[0];
+  memmove(deck, &deck[1], (--*size) * sizeof(ret));
+  deck[*size] = 0;
+  return ret;
 }
 
-void insert_card(char ** deck, int size, char * card, int pos) {
-  int i;
-  for (i = size - 1; i >= pos - 1; i--) {
-    deck[i+1] = deck[i];
-  }
-  deck[pos-1] = card;
+void insert_card(char ** deck, int * size, char * card, int pos) {
+  memmove(&deck[pos+1], &deck[pos], ((*size)++ - pos) * sizeof(char *));
+  deck[5] = card;
 }
 
 int main() {
@@ -85,16 +77,15 @@ int main() {
 
   printf("\nTesting See The Future\n");
   see_the_future(deck);
-  
-  printf("\nTesting draw_card\n");
-  draw_card(deck, size);
 
+  printf("\nTesting draw_card\n");
+  printf("Drew the card \"%s\"\n", draw_card(deck, &size));
   print_deck(deck,size);
 
   printf("\nTesting insert_card\n");
-  insert_card(deck, size, "THIS_CARD_WAS_INSERTED_______", 5);
+  insert_card(deck, &size, "THIS_CARD_WAS_INSERTED_______", 5);
   print_deck(deck,size);
-  
+
   free(deck);
   return 0;
 
