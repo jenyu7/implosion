@@ -1,6 +1,6 @@
 #include "networking.h"
 
-void parse_command(char *s);
+void parse_command(char s[], int i);
 char * trim(char *c);
   void strip_newline( char *str );
 
@@ -39,20 +39,20 @@ int main(int argc, char **argv) {
     for (i = 0; i < num_players; i++) {
       write(players[i], ACK, sizeof(ACK));
       read(players[i], buffer, sizeof(buffer));
-      parse_command(buffer);
+      parse_command(buffer, i);
+      printf("buffer: %s\n", buffer);
       for (j = 0; j < num_players; j++) write(players[j], buffer, sizeof(buffer));
     }
   }
 }
 
-void parse_command(char * cmd)
+void parse_command(char cmd[], int i)
 {
-  strip_newline(cmd);
-  cmd = trim(cmd);
-  printf("parsing %s...\n", cmd);
+  //printf("%d\n", strcmp(cmd, "draw"));
   if(!strcmp(cmd, "draw"))
     {
-      cmd = "attack";
+      printf("drawing...\n");
+      sprintf(cmd, "Player %d drew a card.", i);
     }
   else
     {
