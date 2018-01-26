@@ -76,8 +76,10 @@ int main(int argc, char **argv) {
 
     *strchr(buffer, '\n') = 0;
 
-    if (strcmp(buffer, "print") ==0){
+    if (strcmp(buffer, "print") == 0){
       print_hand(hand, size, catalog);
+      write(server_socket, buffer, sizeof(buffer));
+      memset(buffer, 0, BUFFER_SIZE);
     }
     else if (strcmp(buffer, "draw") != 0) {
       // Change index to card name
