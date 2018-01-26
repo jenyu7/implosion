@@ -107,7 +107,7 @@ int main(int argc, char **argv) {
 	} else if (strcmp(buffer, "double") == 0) {
 	  printf("Played a double card combo!\n");
 	  char card[50];
-	  strcpy(card, draw_card(deck, &deck_size));
+	  strcpy(card, draw_random_card(deck, &deck_size));
 	  printf("%s\n", card);
 	  char card_id[8];
 	  sprintf(card_id, "%d", get_card_id(card));

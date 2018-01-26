@@ -4,6 +4,7 @@
 char * get_card_name(char ** catalog, int id);
 char ** create_catalog(int* size);
 int get_card_id(char * card);
+void print_hand(int hand[], int size, char ** catalog);
 
 char ** create_catalog(int* size){
   *size = 12;
@@ -25,6 +26,15 @@ char ** create_catalog(int* size){
 
 char * get_card_name(char ** catalog, int id){
   return catalog[id-1];
+}
+
+void print_hand(int hand[], int size, char ** catalog){
+  int i;
+  char * out =get_card_name(catalog, hand[0]);
+  for (i = 1; i < size; i ++){
+    sprintf(out, ":%s:%s", out, hand[i]);
+  }
+  printf("Current hand - %s\n", out);
 }
 
 int main(int argc, char **argv) {
@@ -93,7 +103,11 @@ int main(int argc, char **argv) {
       printf("cardid:%d\n", id);
       hand[size] = id;
       size--;
-    } else {
+    }
+    else if (strcmp(buffer, "print") ==0){
+      print_hand(hand, size,catalog);
+    }
+    else {
       write(server_socket, buffer, sizeof(buffer));
       memset(buffer, 0, BUFFER_SIZE);
       read(server_socket, buffer, sizeof(buffer));
@@ -149,59 +163,3 @@ int main(int argc, char **argv) {
 
 
 
-/*
-  memset(buffer, 0, BUFFER_SIZE);
-  read(server_socket, buffer, sizeof(buffer));
-  printf("%s\n", buffer);
-  sscanf(buffer, "You are player %d.", &player_number);
-
-  memset(buffer, 0, BUFFER_SIZE);
-  read(server_socket, buffer, sizeof(buffer));
-  deck_size = atoi(buffer);
-  printf("deck size: %d\n", deck_size);
-  memset(buffer, 0, BUFFER_SIZE);
-  read(server_socket, buffer, sizeof(buffer));
-  deck = string_to_deck(buffer);
-  printf("\n\ndeck\n\n");
-  print_deck(deck, deck_size);
-  hand = create_hand(deck, &deck_size, &hand_size);
-  printf("\n\nhand\n\n");
-  print_deck(hand, hand_size);
-  printf("\n\ndeck\n\n");
-  print_deck(deck, deck_size);
-
-  memset(buffer, 0, BUFFER_SIZE);
-  sprintf(buffer, "%d", deck_size);
-  write(server_socket, buffer, sizeof(buffer));
-
-  memset(buffer, 0, BUFFER_SIZE);
-  strcpy(buffer, deck_to_string(deck, deck_size));
-  printf("%s\n", buffer);
-  write(server_socket, buffer, sizeof(buffer));
-*/
-    /* read(server_socket, buffer, sizeof(buffer)); */
-    /* deck = string_to_deck(buffer); */
-    /* read(server_socket, buffer, sizeof(buffer)); */
-    /* num_players = atoi(buffer); */
-    /* read(server_socket, buffer, sizeof(buffer)); */
-    /* int * player_list; */
-    /* player_list = string_to_players(buffer, num_players); */
-    /* read(server_socket, buffer, sizeof(buffer)); */
-    /* current_player = atoi(buffer); */
-    /* read(server_socket, buffer, sizeof(buffer)); */
-    /* next_player = atoi(buffer); */
-    /* print_deck(hand, hand_size); */
-    //process the stuff
-    //snprintf(buffer, sizeof(buffer), "%d-%s-%s-%d-%d", deck_size, deck_to_string(deck, deck_size), player_string, current_player, next_player);
-
-
-/*
-    printf("my turn\n");
-    read(server_socket, buffer, sizeof(buffer));
-    deck_size = atoi(buffer);
-    printf("%d\n", deck_size);
-
-    printf("enter data: ");
-    fgets(buffer, sizeof(buffer), stdin);
-    *strchr(buffer, '\n') = 0;
-    write(server_socket, buffer, sizeof(buffer));*/
