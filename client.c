@@ -129,17 +129,16 @@ int main(int argc, char **argv) {
           memset(buffer, 0, BUFFER_SIZE);
           read(server_socket, buffer, sizeof(buffer));
           int id = atoi(buffer);
-          printf("Card name:%s\n",get_card_name(catalog, id) );
+          printf("Card name: %s\n",get_card_name(catalog, id) );
           char * name = calloc(50, sizeof(char));
           name = get_card_name(catalog, id);
-          printf("Drew the %s card.", name);
+          printf("Drew the %s card.\n", name);
 	  if (strcmp(name, "Exploding Kitten")){
 	    memset(buffer, 0, BUFFER_SIZE);
 	    strcpy(buffer, "drew");
 	    write(server_socket, buffer, sizeof(buffer));
 	    hand[size] = id;
 	    size++;
-	    printf("size:%d\n", size);
 	  }
 	  else{
 	    int ind;
@@ -150,9 +149,8 @@ int main(int argc, char **argv) {
 	      write(server_socket, buffer, sizeof(buffer));
 	      read(server_socket, buffer, sizeof(buffer));
 	      printf("How many cards from the top do you want to place the exploding kitten?\n");
-	      printf("%s\n", buffer);
+	      //printf("%s\n", buffer);
 	      sprintf(buffer, "%d", 1);
-	      printf("atoi:%d\n", atoi(buffer));
 	      while(atoi(buffer)){
 		printf("Please choose a number greater than 0.\n");
 		fgets(buffer, sizeof(buffer), stdin);
@@ -164,7 +162,7 @@ int main(int argc, char **argv) {
 	      sprintf(buffer, "%s", "dead");
 	      write(server_socket, buffer, sizeof(buffer));
 	      read(server_socket, buffer, sizeof(buffer));
-	      printf("%s\n", buffer);
+	      //printf("%s\n", buffer);
 	      exit(0);
 	    }
 	  }
@@ -176,16 +174,15 @@ int main(int argc, char **argv) {
         }
       }
       else {
-        //printf("\nCARD: %s\n", get_card_name(catalog,pos));
+        //printf("\nCard: %s\n", get_card_name(catalog,pos));
         strcpy(buffer, get_card_name(catalog,hand[pos]));
 
 
         write(server_socket, buffer, sizeof(buffer));
         memset(buffer, 0, BUFFER_SIZE);
         read(server_socket, buffer, sizeof(buffer));
-        printf("buffer:%s\n", buffer);
+        //printf("buffer:%s\n", buffer);
         int id = atoi(buffer);
-        printf("cardid:%d\n", id);
         remove_card_from_hand(hand, pos, &size);
       }
     }
@@ -193,21 +190,18 @@ int main(int argc, char **argv) {
       write(server_socket, buffer, sizeof(buffer));
       memset(buffer, 0, BUFFER_SIZE);
       read(server_socket, buffer, sizeof(buffer));
-      printf("buffer:%s\n", buffer);
+      //printf("buffer:%s\n", buffer);
       int id = atoi(buffer);
-      printf("here\n");
-      printf("cardid:%d\n", id);
-      printf("Card name:%s\n",get_card_name(catalog, id) );
+      printf("Card name: %s\n",get_card_name(catalog, id) );
       char * name = calloc(50, sizeof(char));
       name = get_card_name(catalog, id);
-      sprintf(buffer, "Drew the %s card.", name);
+      sprintf(buffer, "Drew the %s card.\n", name);
       if (strcmp(name, "Exploding Kitten")){
 	memset(buffer, 0, BUFFER_SIZE);
 	strcpy(buffer, "drew");
 	write(server_socket, buffer, sizeof(buffer));
 	hand[size] = id;
 	size++;
-	printf("size:%d\n", size);
       }
       else{
 	int ind;
@@ -219,8 +213,6 @@ int main(int argc, char **argv) {
 	  write(server_socket, buffer, sizeof(buffer));
 	  read(server_socket, buffer, sizeof(buffer));
 	  printf("How many cards from the top do you want to place the exploding kitten?\n");
-	  //sprintf(buffer, "%d", 1);
-	  printf("atoi:%d\n", atoi(buffer));
 	  while(atoi(buffer)<=0){
 	    printf("Please choose a number greater than 0.\n");
 	    fgets(buffer, sizeof(buffer), stdin);
@@ -229,11 +221,9 @@ int main(int argc, char **argv) {
 	      
 	}
 	else{
-	  printf("%d\n", ind);
 	  sprintf(buffer, "%s", "dead");
 	  write(server_socket, buffer, sizeof(buffer));
 	  read(server_socket, buffer, sizeof(buffer));
-	  printf("%s\n", buffer);
 	  exit(0);
 	}
       }

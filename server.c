@@ -61,10 +61,10 @@ int main(int argc, char **argv) {
         if(strcmp(buffer, "draw") == 0) {
           char card[50];
           strcpy(card, draw_card(deck, &deck_size));
-          printf("%s\n", card);
+          //printf("%s\n", card);
           char card_id[8];
           sprintf(card_id, "%d", get_card_id(card));
-          printf("cardid:%s\n", card_id);
+          //printf("cardid:%s\n", card_id);
           write(players[i], card_id, sizeof(card_id));
           sprintf(buffer, "Player %d drew a card.", i);
 	  turns[i] -= 1;
