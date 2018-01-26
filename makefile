@@ -6,10 +6,10 @@ server: server.o networking.o
 client: client.o networking.o
 	gcc -g -o client client.o networking.o
 
-client.o: client.c networking.h
+client.o: client.c fxn.c networking.h
 	gcc -g -c client.c
 
-server.o: server.c networking.h
+server.o: server.c fxn.c networking.h
 	gcc -g -c server.c
 
 networking.o: networking.c networking.h

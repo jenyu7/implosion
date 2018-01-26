@@ -8,14 +8,11 @@
 #include <netdb.h>
 #include <string.h>
 #include <errno.h>
-#include <fcntl.h>
-#include <ctype.h>
-#include <pwd.h>
 
 #ifndef NETWORKING_H
 #define NETWORKING_H
 
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 2560
 #define ACK "DUMMY MESSAGE"
 #define PORT "9001"
 #define TEST_IP "127.0.0.1"

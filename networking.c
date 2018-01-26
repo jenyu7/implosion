@@ -88,7 +88,7 @@ int server_connect(int sd) {
   returns the file descriptor for the socket
   =========================*/
 int client_setup(char * server) {
-  int sd, i, fd;
+  int sd, i;
 
   //create the socket
   sd = socket( AF_INET, SOCK_STREAM, 0 );
@@ -111,11 +111,5 @@ int client_setup(char * server) {
   free(hints);
   freeaddrinfo(results);
 
-  //create file to hold current cards
-  fd = open("hand", O_CREAT, 0644);
-  close(fd);
-  error_check(fd, "creating player file");
-  printf("Created player's card pile.\n");
-  
   return sd;
 }
