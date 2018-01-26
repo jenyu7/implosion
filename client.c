@@ -147,7 +147,7 @@ int main(int argc, char **argv) {
         // Check if player has a defuse
         int i = 0;
         for (i = 0; i < size; i++) {
-          if (hand[i] == 0) {
+          if (strcmp(get_card_name(catalog, hand[i]), "Defuse") == 0) {
 
             // Write defuse to server
             strcpy(buffer, get_card_name(catalog,hand[i]));
