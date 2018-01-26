@@ -15,12 +15,11 @@ int main(int argc, char **argv) {
   }
 
   int listen_socket, i = 0, j;
-  int players[num_players], subservers[num_players], player_list[num_players], turns[num_players];
+  int players[num_players], subservers[num_players], turns[num_players];
   listen_socket = server_setup();
 
   while (i < num_players) {
     players[i] = server_connect(listen_socket);
-    player_list[i] = i;
     turns[i] = 0;
     subservers[i] = fork();
     if (!subservers[i]) {
@@ -32,7 +31,7 @@ int main(int argc, char **argv) {
   printf("Server is no longer accepting players.\n");
   shutdown(listen_socket, SHUT_RD);
   char buffer[BUFFER_SIZE];
-  
+
   int deck_size;
   //Creates deck
   char ** deck = create_deck(num_players, &deck_size);
@@ -49,90 +48,90 @@ int main(int argc, char **argv) {
   }
   add_kittens(deck, num_players, &deck_size);
   shuffle(deck, deck_size);
-  
+
   memset(buffer, 0, BUFFER_SIZE);
-  
-  
+
+
   while(1) {
     for (i = 0; i < num_players; i++) {
       turns[i] += 1;
       while (turns[i]) {
-	write(players[i], ACK, sizeof(ACK));
-	read(players[i], buffer, sizeof(buffer));
-	if(strcmp(buffer, "draw") == 0) {
-	  char card[50];
-	  strcpy(card, draw_card(deck, &deck_size));
-	  printf("%s\n", card);
-	  char card_id[8];
-	  sprintf(card_id, "%d", get_card_id(card));
-	  printf("cardid:%s\n", card_id);
-	  write(players[i], card_id, sizeof(card_id));
-	  sprintf(buffer, "Player %d drew a card.", i);
-	  turns[i] -= 1;
-	} else if (strcmp(buffer, "Defuse") == 0) {
-	  printf("Play Defuse\n");
-	  sprintf(buffer, "Player %d defused the exploding kitten!", i);
+        write(players[i], ACK, sizeof(ACK));
+        read(players[i], buffer, sizeof(buffer));
+        if(strcmp(buffer, "draw") == 0) {
+          char card[50];
+          strcpy(card, draw_card(deck, &deck_size));
+          printf("%s\n", card);
+          char card_id[8];
+          sprintf(card_id, "%d", get_card_id(card));
+          printf("cardid:%s\n", card_id);
+          write(players[i], card_id, sizeof(card_id));
+          sprintf(buffer, "Player %d drew a card.", i);
+          turns[i] -= 1;
+        } else if (strcmp(buffer, "Defuse") == 0) {
+          printf("Play Defuse\n");
+          sprintf(buffer, "Player %d defused the exploding kitten!", i);
 
-	  strcpy(buffer, "How many cards do you want to place the kitten under?");
-	  read(players[i], buffer, sizeof(buffer));
-	} else if (strcmp(buffer, "Attack") == 0) {
-	  printf("Play Attack\n");
-	  turns[i] = 0;
+          strcpy(buffer, "How many cards do you want to place the kitten under?");
+          read(players[i], buffer, sizeof(buffer));
+        } else if (strcmp(buffer, "Attack") == 0) {
+          printf("Play Attack\n");
+          turns[i] = 0;
 
-	  int index = (i + 1) % num_players;
-	  turns[index] += 1;
-	  
-	  sprintf(buffer, "You attacked Player %d!", index);
-	  write(players[i], buffer, sizeof(buffer));
-	  sprintf(buffer, "Player %d attacked Player %d", i, index);
-	} else if (strcmp(buffer, "Shuffle") == 0) {
-	  printf("Play Shuffle\n");
-	  shuffle(deck, deck_size);
-	  strcpy(buffer, "You shuffled the deck!");
-	  write(players[i], buffer, sizeof(buffer));
-	  sprintf(buffer, "Player %d shuffled the deck!", i);
-	} else if (strcmp(buffer, "Alter The Future") == 0) {
-	  printf("Play Alter The Future\n");
-	  alter_the_future(deck);
-	  strcpy(buffer, "You altered the future!");
-	  write(players[i], buffer, sizeof(buffer));
-	  sprintf(buffer, "Player %d altered the future!", i);
-	} else if (strcmp(buffer, "See The Future") == 0) {
-	  printf("Play See The Future\n");
-	  strcpy(buffer, see_the_future(deck));
-	  write(players[i], buffer, sizeof(buffer));
-	  sprintf(buffer, "Player %d saw the future!", i);
-	} else if (strcmp(buffer, "Skip") == 0) {
-	  printf("Play Skip\n");
-	  turns[i] -= 1;
-	  strcpy(buffer, "You skipped your turn!");
-	  write(players[i], buffer, sizeof(buffer));
-	  sprintf(buffer, "Player %d skipped his turn!", i);
-	} else if (strcmp(buffer, "double") == 0) {
-	  printf("Played a double card combo!\n");
-	  char card[50];
-	  strcpy(card, draw_random_card(deck, &deck_size));
-	  printf("%s\n", card);
-	  char card_id[8];
-	  sprintf(card_id, "%d", get_card_id(card));
-	  printf("cardid:%s\n", card_id);
-	  write(players[i], card_id, sizeof(card_id));
-	  sprintf(buffer, "Player %d drew a card.", i);
-	} else if (strcmp(buffer, "Dead") == 0) {
-	  printf("Player %d has died!", i);
-	  sprintf(buffer, "Player %d has died!", i);
-	  // Remove player from array and decrement num_players
-	  //int j;
-	  //for (j = num_players; j > 0;
-	  num_players -= 1;
+          int index = (i + 1) % num_players;
+          turns[index] += 1;
 
-	  if (num_players == 1) {
-	    sprintf(buffer, "Player %d has won the game!", players[0]);
-	  }
-	}
-	for (j = 0; j < num_players; j++)
-	  if (j != i)
-	    write(players[j], buffer, sizeof(buffer));
+          sprintf(buffer, "You attacked Player %d!", index);
+          write(players[i], buffer, sizeof(buffer));
+          sprintf(buffer, "Player %d attacked Player %d", i, index);
+        } else if (strcmp(buffer, "Shuffle") == 0) {
+          printf("Play Shuffle\n");
+          shuffle(deck, deck_size);
+          strcpy(buffer, "You shuffled the deck!");
+          write(players[i], buffer, sizeof(buffer));
+          sprintf(buffer, "Player %d shuffled the deck!", i);
+        } else if (strcmp(buffer, "Alter The Future") == 0) {
+          printf("Play Alter The Future\n");
+          alter_the_future(deck);
+          strcpy(buffer, "You altered the future!");
+          write(players[i], buffer, sizeof(buffer));
+          sprintf(buffer, "Player %d altered the future!", i);
+        } else if (strcmp(buffer, "See The Future") == 0) {
+          printf("Play See The Future\n");
+          strcpy(buffer, see_the_future(deck));
+          write(players[i], buffer, sizeof(buffer));
+          sprintf(buffer, "Player %d saw the future!", i);
+        } else if (strcmp(buffer, "Skip") == 0) {
+          printf("Play Skip\n");
+          turns[i] -= 1;
+          strcpy(buffer, "You skipped your turn!");
+          write(players[i], buffer, sizeof(buffer));
+          sprintf(buffer, "Player %d skipped his turn!", i);
+        } else if (strcmp(buffer, "double") == 0) {
+          printf("Played a double card combo!\n");
+          char card[50];
+          strcpy(card, draw_random_card(deck, &deck_size));
+          printf("%s\n", card);
+          char card_id[8];
+          sprintf(card_id, "%d", get_card_id(card));
+          printf("cardid:%s\n", card_id);
+          write(players[i], card_id, sizeof(card_id));
+          sprintf(buffer, "Player %d drew a card.", i);
+        } else if (strcmp(buffer, "Dead") == 0) {
+          printf("Player %d has died!", i);
+          sprintf(buffer, "Player %d has died!", i);
+          // Remove player from array and decrement num_players
+          //int j;
+          //for (j = num_players; j > 0;
+          num_players -= 1;
+
+          if (num_players == 1) {
+            sprintf(buffer, "Player %d has won the game!", players[0]);
+          }
+        }
+        for (j = 0; j < num_players; j++)
+          if (j != i)
+            write(players[j], buffer, sizeof(buffer));
       }
     }
   }
@@ -169,6 +168,6 @@ int get_card_id(char * card){
 }
 
 /*
-      sprintf(buffer, "%d", deck_size);
-      write(players[i], buffer, sizeof(buffer));
- */
+  sprintf(buffer, "%d", deck_size);
+  write(players[i], buffer, sizeof(buffer));
+*/

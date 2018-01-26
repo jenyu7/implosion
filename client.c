@@ -108,8 +108,8 @@ int main(int argc, char **argv) {
       printf("buffer:%s\n", buffer);
       int id = atoi(buffer);
       printf("cardid:%d\n", id);
-      hand[size] = id;
-      size--;
+      memmove(&hand[pos], &hand[pos+1], ((--size) - pos) * sizeof(int));
+      hand[size] = 0;
     }
     else {
       write(server_socket, buffer, sizeof(buffer));
