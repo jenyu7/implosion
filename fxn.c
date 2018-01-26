@@ -80,6 +80,15 @@ char * draw_card(char ** deck, int * size) {
   return ret;
 }
 
+char * draw_random_card(char ** deck, int * size) {
+  srand(time(NULL));
+  int pos = rand() % *size;
+  char * ret = deck[pos];
+  memmove(&deck[pos], &deck[pos+1], (--*size - pos) * sizeof(ret));
+  deck[*size] = 0;
+  return ret;
+}
+
 void insert_card(char ** deck, int * size, char * card, int pos) {
   memmove(&deck[pos+1], &deck[pos], ((*size)++ - pos) * sizeof(char *));
   deck[pos] = card;
@@ -151,16 +160,16 @@ char ** create_hand(char ** deck, int * deck_size, int * hand_size) {
 
 /*   int size; */
 
-/*   printf("\nCreating Deck\n"); */
-/*   char ** deck = create_deck(2, &size); */
-/*   print_deck(deck, size); */
+/*   /\* printf("\nCreating Deck\n"); *\/ */
+/*   /\* char ** deck = create_deck(2, &size); *\/ */
+/*   /\* print_deck(deck, size); *\/ */
 
-/*   printf("\nShuffling Deck\n"); */
-/*   shuffle(deck, size); */
-/*   print_deck(deck, size); */
+/*   /\* char * card = draw_random_card(deck, &size); *\/ */
+/*   /\* printf("\n%s\n", card); *\/ */
 
-/*   /\* printf("\nTesting See The Future\n"); *\/ */
-/*   /\* see_the_future(deck); *\/ */
+/*   /\* printf("\nShuffling Deck\n"); *\/ */
+/*   /\* shuffle(deck, size); *\/ */
+/*   /\* print_deck(deck, size); *\/ */
 
 /*   /\* printf("\nTesting draw_card\n"); *\/ */
 /*   /\* printf("Drew the card \"%s\"\n", draw_card(deck, &size)); *\/ */
@@ -170,26 +179,9 @@ char ** create_hand(char ** deck, int * deck_size, int * hand_size) {
 /*   /\* insert_card(deck, &size, "INSERT_CARD", 5); *\/ */
 /*   /\* print_deck(deck,size); *\/ */
 
-/*   char * deck_string = deck_to_string(deck, size); */
+/*   /\* free(deck); *\/ */
 
-/*   printf("\n%s\n\n", deck_string); */
-
-/*   char ** deck2 = string_to_deck(deck_string); */
-
-/*   print_deck(deck2, 51); */
-
-/*   int hand_size; */
-/*   char ** hand = create_hand(deck2, &size, &hand_size); */
-/*   printf("\n\nprinting deck\n\n"); */
-/*   print_deck(deck, size); */
-
-/*   printf("\n\nprinting hand\n\n"); */
-/*   print_deck(hand, hand_size); */
-
-/*   printf("\n\nprinting deck\n\n"); */
-/*   print_deck(deck, size); */
-
-/*   free(deck); */
+/*   int players[4] = {0,1,2,3}; */
 /*   return 0; */
 
 /* } */
