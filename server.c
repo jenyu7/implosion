@@ -104,16 +104,16 @@ int main(int argc, char **argv) {
 	} else if (strcmp(buffer, "Skip") == 0) {
 	  printf("Play Skip\n");
 	  turns[i] -= 1;
-	} else if (strcmp(buffer, "Catermelon") == 0) {
-	  printf("Play Catermelon\n");
-	} else if (strcmp(buffer, "Beard Cat") == 0) {
-	  printf("Play Beard Cat\n");
-	} else if (strcmp(buffer, "Tacocat") == 0) {
-	  printf("Play Tacocat\n");
-	} else if (strcmp(buffer, "Hairy Potato Cat") == 0) {
-	  printf("Play Hairy Potato Cat\n");
-	} else if (strcmp(buffer, "Rainbow Ralphing Cat") == 0) {
-	  printf("Play Rainbow Ralphing Cat\n");
+	} else if (strcmp(buffer, "double") == 0) {
+	  printf("Played a double card combo!\n");
+	  char card[50];
+	  strcpy(card, draw_card(deck, &deck_size));
+	  printf("%s\n", card);
+	  char card_id[8];
+	  sprintf(card_id, "%d", get_card_id(card));
+	  printf("cardid:%s\n", card_id);
+	  write(players[i], card_id, sizeof(card_id));
+	  sprintf(buffer, "Player %d drew a card.", i);
 	} else if (strcmp(buffer, "Dead") == 0) {
 	  printf("Player %d has died!", i);
 	  sprintf(buffer, "Player %d has died!", i);

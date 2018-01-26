@@ -68,6 +68,19 @@ int main(int argc, char **argv) {
     if (strcmp(buffer, "draw") != 0) {
       // Change index to card name
       int pos = atoi(buffer);
+      if(hand[pos] > 6){
+        int next;
+        printf("Index of other cat card: ");
+        fgets(next, sizeof(next), stdin);
+        if(hand[next] == hand[pos]){
+          strcpy(buffer, "double");
+  
+        }
+      else{
+          printf("Sorry, but the cards don't match.\n");
+        }
+       }
+
       //printf("\nCARD: %s\n", get_card_name(catalog,pos));
       strcpy(buffer, get_card_name(catalog,hand[pos]));
 
