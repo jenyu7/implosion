@@ -42,3 +42,12 @@ $ ./server <NUMBER OF PLAYERS (2-6)>
 $ ./client
 ```
 7. Play the game!
+
+## How to Play
+
+1. Commands: 
+  * `print`: prints out your current hand of cards
+  * `draw`: draws a card from the deck
+  * `<number>`: To use a card, type in its index in the hand (shown using `print`)
+2. Each player starts off with five cards, one of them being Defuse, which nullifies any exploding kittens. 
+3. Objective of the game is to not draw an exploding kitten without a Defuse handy (if so, you die and lose the game.) 
