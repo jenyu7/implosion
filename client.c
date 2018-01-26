@@ -25,6 +25,27 @@ char ** create_catalog(int* size){
   return catalog;
 }
 
+int check_buffer(char * buffer, int size, int hand[]){
+  if (strcmp(buffer, "draw") == 0)
+    return 0;
+  else if (strcmp(buffer, "print") == 0)
+    return 0;
+  else{
+    int i = atoi(buffer);
+    if (i == 0)
+      return 1;
+    else{
+      if (i > size-1)
+	return 1;
+      else if (hand[i] == 0)
+	return 1;
+      else
+	return 0;
+      
+    }
+  }
+}
+
 char * get_card_name(char ** catalog, int id){
   return catalog[id-1];
 }
@@ -72,10 +93,11 @@ int main(int argc, char **argv) {
       }
       else break;
     }
-    printf("enter data: ");
-    fgets(buffer, sizeof(buffer), stdin);
-
-    *strchr(buffer, '\n') = 0;
+    while(check_buffer(buffer, size, hand)){
+      printf("enter data: ");
+      fgets(buffer, sizeof(buffer), stdin);
+      *strchr(buffer, '\n') = 0;
+    }
 
     if (strcmp(buffer, "print") == 0){
       print_hand(hand, size, catalog);
@@ -147,16 +169,14 @@ int main(int argc, char **argv) {
       name = get_card_name(catalog, id);
       sprintf(buffer, "Drew the %s card.", name);
       printf("%s\n", buffer);
-          if (i == size-1) {
-            // Check if player is dead
-            printf("\n=========YOU DIED========\n");
-            // Handle Death
-            strcpy(buffer, "Dead");
-            write(server_socket, buffer, sizeof(buffer));
-            memset(buffer, 0, BUFFER_SIZE);
-            exit(0);
-          }
-        }
+      if (i == size-1) {
+	// Check if player is dead
+	printf("\n=========YOU DIED========\n");
+	// Handle Death
+	strcpy(buffer, "Dead");
+	write(server_socket, buffer, sizeof(buffer));
+	memset(buffer, 0, BUFFER_SIZE);
+	exit(0);
       }
     }
   }
