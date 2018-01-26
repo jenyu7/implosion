@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
       // Change index to card name
       int pos = atoi(buffer);
       //printf("\nCARD: %s\n", get_card_name(catalog,pos));
-      strcpy(buffer, get_card_name(catalog,pos)); // need card from hand
+      strcpy(buffer, get_card_name(catalog,hand[pos]));
 
       
       write(server_socket, buffer, sizeof(buffer));
@@ -81,11 +81,36 @@ int main(int argc, char **argv) {
       printf("here\n");
       printf("cardid:%d\n", id);
       hand[size] = id;
-      size ++;
+      size++;
       printf("Card name:%s\n",get_card_name(catalog, id) );
       char * name = get_card_name(catalog, id);
       sprintf(buffer, "Drew the %s card.", name);
+
       printf("%s\n", buffer);
+
+      // Exploding Kitten Check
+      if (strcmp(name, "Exploding Kitten") == 0) {
+	// Check if player has a defuse
+	int i = 0;
+	for (i = 0; i < size; i++) {
+	  if (hand[i] == 0) {
+	    //strcpy(buffer, get_card_name(catalog,hand[pos]));
+
+	    
+	    write(server_socket, buffer, sizeof(buffer));
+	    memset(buffer, 0, BUFFER_SIZE);
+	    read(server_socket, buffer, sizeof(buffer));
+	    printf("buffer:%s\n", buffer);
+	    int id = atoi(buffer);
+	    printf("cardid:%d\n", id);
+	    hand[size] = id;
+	    size--;
+
+	    
+	  }
+	}
+	printf("======YOU DIED====="); // WRITE TO SERVER
+      }
     }
   }
 }

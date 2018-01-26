@@ -7,7 +7,7 @@ int add_cards(char ** deck, char * card_name, int amount, int pos){
 
 char ** create_deck(int players, int * deck_size) {
   int pos = 0;
-  *deck_size = 51;
+  *deck_size = 46;
   char ** deck = calloc(*deck_size, sizeof(char *));
 
   pos = add_cards(deck, "Attack", 4, pos);
@@ -51,11 +51,16 @@ void shuffle ( char ** deck, int size ) {
 /*   return card; */
 /* } */
 
-void see_the_future(char ** deck) {
+char * see_the_future(char ** deck) {
+  char * buffer = calloc(1000, sizeof(char));
   int i;
   for (i = 0; i < 3; i++) {
+    char tmp[500];
     printf("Card %d: %s\n", i + 1, deck[i]);
+    sprintf(tmp, "Card %d: %s\n", i + 1, deck[i]);
+    strcat(buffer, tmp);
   }
+  return buffer;
 }
 
 char * draw_card(char ** deck, int * size) {

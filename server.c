@@ -62,18 +62,31 @@ int main(int argc, char **argv) {
 	  printf("cardid:%s\n", card_id);
 	  write(players[i], card_id, sizeof(card_id));
 	  sprintf(buffer, "Player %d drew a card.", i);
+	  turns[i] -= 1;
 	} else if (strcmp(buffer, "Defuse") == 0) {
 	  printf("Play Defuse\n");
+	  sprintf(buffer, "Player %d defused the exploding kitten!", i);
+
+	  strcpy(buffer, "How many cards do you want to place the kitten under?");
+	  read(players[i], buffer, sizeof(buffer));
 	} else if (strcmp(buffer, "Attack") == 0) {
 	  printf("Play Attack\n");
 	} else if (strcmp(buffer, "Shuffle") == 0) {
 	  printf("Play Shuffle\n");
+	  shuffle(deck, deck_size);
+	  strcpy(buffer, "You shuffled the deck!");
+	  write(players[i], buffer, sizeof(buffer));
+	  sprintf(buffer, "Player %d shuffled the deck!", i);
 	} else if (strcmp(buffer, "Favor") == 0) {
 	  printf("Play Favor\n");
 	} else if (strcmp(buffer, "See The Future") == 0) {
 	  printf("Play See The Future\n");
+	  strcpy(buffer, see_the_future(deck));
+	  write(players[i], buffer, sizeof(buffer));
+	  sprintf(buffer, "Player %d saw the future!", i);
 	} else if (strcmp(buffer, "Skip") == 0) {
 	  printf("Play Skip\n");
+	  turns[i] -= 1;
 	} else if (strcmp(buffer, "Catermelon") == 0) {
 	  printf("Play Cateremlon\n");
 	} else if (strcmp(buffer, "Beard Cat") == 0) {
@@ -84,10 +97,7 @@ int main(int argc, char **argv) {
 	  printf("Play Hairy Potato Cat\n");
 	} else if (strcmp(buffer, "Rainbow Ralphing Cat") == 0) {
 	  printf("Play Rainbow Ralphing Cat\n");
-	} else if (strcmp(buffer, "Exploding Kitten") == 0) {
-	  printf("EXPLODING KITTEN");
-	}
-	turns[i] -= 1;
+	} 
 	for (j = 0; j < num_players; j++)
 	  if (j != i)
 	    write(players[j], buffer, sizeof(buffer));
