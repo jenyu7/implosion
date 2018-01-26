@@ -14,15 +14,15 @@ char ** create_deck(int players, int * deck_size) {
   pos = add_cards(deck, "Skip", 4, pos);
   pos = add_cards(deck, "Favor", 4, pos);
   pos = add_cards(deck, "Shuffle", 4, pos);
-  pos = add_cards(deck, "See_The_Future", 5, pos);
+  pos = add_cards(deck, "See The Future", 5, pos);
   pos = add_cards(deck, "Tacocat", 4, pos);
-  pos = add_cards(deck, "Rainbow_Ralphing_Cat", 4, pos);
-  pos = add_cards(deck, "Hairy_Potato_Cat", 4, pos);
+  pos = add_cards(deck, "Rainbow Ralphing Cat", 4, pos);
+  pos = add_cards(deck, "Hairy Potato Cat", 4, pos);
   pos = add_cards(deck, "Catermelon", 4, pos);
-  pos = add_cards(deck, "Beard_Cat", 4, pos);
-  pos = add_cards(deck, "Nope", 5, pos);
+  pos = add_cards(deck, "Beard Cat", 4, pos);
+  //pos = add_cards(deck, "Nope", 5, pos);
   pos = add_cards(deck, "Defuse", 6 - players, pos);
-  pos = add_cards(deck, "Exploding_Kitten", players - 1, pos);
+  pos = add_cards(deck, "Exploding Kitten", players - 1, pos);
 
   return deck;
 }

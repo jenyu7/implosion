@@ -1,8 +1,7 @@
 #include "networking.h"
 #include "fxn.c"
 
-void process(char *s);
-void subserver(int from_client);
+int get_card_id(char * card);
 
 int main(int argc, char **argv) {
   int num_players = 0;
@@ -31,84 +30,75 @@ int main(int argc, char **argv) {
   }
   printf("Server is no longer accepting players.\n");
   shutdown(listen_socket, SHUT_RD);
-  int deck_size;
-  char ** deck = create_deck(num_players, &deck_size);
-  shuffle(deck, deck_size);
   char buffer[BUFFER_SIZE];
-  memset(buffer, 0, BUFFER_SIZE);
-  int current_player = player_list[0];
-  int next_player = player_list[1];
-
+  
+  //setup players
   for (i = 0; i < num_players; i++) {
     snprintf(buffer, sizeof(buffer), "You are player #%d", i);
     write(players[i], buffer, sizeof(buffer));
     memset(buffer, 0, BUFFER_SIZE);
-
-    sprintf(buffer, "%d", deck_size);
-    write(players[i], buffer, sizeof(buffer));
-    memset(buffer, 0, BUFFER_SIZE);
-
-    strcpy(buffer, deck_to_string(deck, deck_size));
-    write(players[i], buffer, sizeof(buffer));
-    memset(buffer, 0, BUFFER_SIZE);
-
-
-    read(players[i], buffer, sizeof(buffer));
-    deck_size = atoi(buffer);
-    printf("deck size: %d\n", deck_size);
-    printf("%d\n", deck_size);
-
-    memset(buffer, 0, BUFFER_SIZE);
-    read(players[i], buffer, sizeof(buffer));
-    deck = string_to_deck(buffer);
-    printf("\n\ndeck\n\n");
-    print_deck(deck, deck_size);
-
-
   }
-  int f = 0;
-  while(f--) {
+  memset(buffer, 0, BUFFER_SIZE);
+  
+  int deck_size;
+  //Creates deck
+  char ** deck = create_deck(num_players, &deck_size);
+  //Shuffles deck
+  //shuffle(deck, deck_size);
+  
+  while(1) {
     for (i = 0; i < num_players; i++) {
       write(players[i], ACK, sizeof(ACK));
-      sprintf(buffer, "%d", deck_size);
-      write(players[i], buffer, sizeof(buffer));
-
-      /* strcpy(buffer, deck_to_string(deck, deck_size)); */
-      /* write(players[i], buffer, sizeof(buffer)); */
-      /* sprintf(buffer, "%d", num_players); */
-      /* write(players[i], buffer, sizeof(buffer)); */
-      /* strcpy(buffer, players_to_string(player_list, num_players)); */
-      /* write(players[i], buffer, sizeof(buffer)); */
-      /* sprintf(buffer, "%d", current_player); */
-      /* write(players[i], buffer, sizeof(buffer)); */
-      /* sprintf(buffer, "%d", next_player); */
-      /* write(players[i], buffer, sizeof(buffer)); */
-
       read(players[i], buffer, sizeof(buffer));
-      //for (j = 0; j < num_players; j++) write(players[j], buffer, sizeof(buffer));
+      if(strcmp(buffer, "draw") == 0)
+	{
+	  char card[50];
+	  strcpy(card, draw_card(deck, &deck_size));
+	  printf("%s\n", card);
+	  char card_id[8];
+	  sprintf(card_id, "%d", get_card_id(card));
+	  printf("cardid:%s\n", card_id);
+	  write(players[i], card_id, sizeof(card_id));
+	  sprintf(buffer, "Player %d drew a card.", i);
+	}
+      for (j = 0; j < num_players; j++)
+	if (j != i)
+	  write(players[j], buffer, sizeof(buffer));
     }
   }
 }
 
-void subserver(int client_socket) {
-  char buffer[BUFFER_SIZE];
 
-  while (read(client_socket, buffer, sizeof(buffer))) {
-
-    printf("[subserver %d] received: [%s]\n", getpid(), buffer);
-    process(buffer);
-    write(client_socket, buffer, sizeof(buffer));
-  }//end read loop
-  close(client_socket);
-  exit(0);
+int get_card_id(char * card){
+  if (strcmp(card, "Defuse") == 0)
+    return 1;
+  else if (strcmp(card, "Attack") == 0)
+    return 2;
+  else if (strcmp(card, "Shuffle") == 0)
+    return 3;
+  else if (strcmp(card, "Favor") == 0)
+    return 4;
+  else if (strcmp(card, "See The Future") == 0)
+    return 5;
+  else if (strcmp(card, "Reverse") == 0)
+    return 6;
+  else if (strcmp(card, "Skip") == 0)
+    return 7;
+  else if (strcmp(card, "Cattermelon") == 0)
+    return 8;
+  else if (strcmp(card, "Beard Cat") == 0)
+    return 9;
+  else if (strcmp(card, "Tacocat") == 0)
+    return 10;
+  else if (strcmp(card, "Potato Cat") == 0)
+    return 11;
+  else if (strcmp(card, "Rainbow Ralphing Cat") == 0)
+    return 12;
+  else
+    return 0;
 }
 
-void process(char * s) {
-  while (*s) {
-    if (*s >= 'a' && *s <= 'z')
-      *s = ((*s - 'a') + 13) % 26 + 'a';
-    else  if (*s >= 'A' && *s <= 'Z')
-      *s = ((*s - 'a') + 13) % 26 + 'a';
-    s++;
-  }
-}
+/*
+      sprintf(buffer, "%d", deck_size);
+      write(players[i], buffer, sizeof(buffer));
+ */
