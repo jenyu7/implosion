@@ -11,7 +11,7 @@ char ** create_catalog(int* size){
   catalog[0] = "Defuse";
   catalog[1] = "Attack";
   catalog[2] = "Shuffle";
-  catalog[3] = "Favor";
+  catalog[3] = "Alter The Future";
   catalog[4] = "See The Future";
   catalog[5] = "Skip";
   catalog[6] = "Catermelon";
@@ -94,31 +94,41 @@ int main(int argc, char **argv) {
       char * name = calloc(50, sizeof(char));
       name = get_card_name(catalog, id);
       sprintf(buffer, "Drew the %s card.", name);
-      free(name);
       printf("%s\n", buffer);
 
       // Exploding Kitten Check
       if (strcmp(name, "Exploding Kitten") == 0) {
-  // Check if player has a defuse
-  int i = 0;
-  for (i = 0; i < size; i++) {
-    if (hand[i] == 0) {
-      //strcpy(buffer, get_card_name(catalog,hand[pos]));
+	// Check if player has a defuse
+	int i = 0;
+	for (i = 0; i < size; i++) {
+	  if (hand[i] == 0) {
+	    
+	    // Write defuse to server
+	    strcpy(buffer, get_card_name(catalog,hand[i]));
 
-      
-      write(server_socket, buffer, sizeof(buffer));
-      memset(buffer, 0, BUFFER_SIZE);
-      read(server_socket, buffer, sizeof(buffer));
-      printf("buffer:%s\n", buffer);
-      int id = atoi(buffer);
-      printf("cardid:%d\n", id);
-      hand[size] = id;
-      size--;
+	    write(server_socket, buffer, sizeof(buffer));
+	    memset(buffer, 0, BUFFER_SIZE);
+	    read(server_socket, buffer, sizeof(buffer));
+	    printf("buffer:%s\n", buffer);
+	    int id = atoi(buffer);
+	    printf("cardid:%d\n", id);
+	    hand[size] = id;
+	    size--;
 
-      
-    }
-  }
-  printf("======YOU DIED====="); // WRITE TO SERVER
+	    // Ask player where to put kitten
+	    printf("\nHow many cards do you want to place the kitten under?\n");
+	    fgets(buffer, sizeof(buffer), stdin);
+	    *strchr(buffer, '\n') = 0;
+	    write(server_socket, buffer, sizeof(buffer));
+	    memset(buffer, 0, BUFFER_SIZE);
+	  }
+	}
+	printf("\n=========YOU DIED========\n");
+	// Handle Death
+	strcpy(buffer, "Dead");
+	write(server_socket, buffer, sizeof(buffer));
+	memset(buffer, 0, BUFFER_SIZE);
+	exit(0);
       }
     }
   }

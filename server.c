@@ -77,14 +77,25 @@ int main(int argc, char **argv) {
 	  read(players[i], buffer, sizeof(buffer));
 	} else if (strcmp(buffer, "Attack") == 0) {
 	  printf("Play Attack\n");
+	  turns[i] = 0;
+	  turns[i+1] += 1;
+
+	  // do some modulo stuff instead to get next player
+	  int p = i+1;
+	  if (p == num_players) {
+	    p = 0;
+	  }
+	  sprintf(buffer, "You attacked Player %d!", p);
+	  write(players[i], buffer, sizeof(buffer));
+	  sprintf(buffer, "Player %d attacked Player %d", i, p);
 	} else if (strcmp(buffer, "Shuffle") == 0) {
 	  printf("Play Shuffle\n");
 	  shuffle(deck, deck_size);
 	  strcpy(buffer, "You shuffled the deck!");
 	  write(players[i], buffer, sizeof(buffer));
 	  sprintf(buffer, "Player %d shuffled the deck!", i);
-	} else if (strcmp(buffer, "Favor") == 0) {
-	  printf("Play Favor\n");
+	} else if (strcmp(buffer, "Alter The Future") == 0) {
+	  printf("Play Alter The Future\n");
 	} else if (strcmp(buffer, "See The Future") == 0) {
 	  printf("Play See The Future\n");
 	  strcpy(buffer, see_the_future(deck));
@@ -94,7 +105,7 @@ int main(int argc, char **argv) {
 	  printf("Play Skip\n");
 	  turns[i] -= 1;
 	} else if (strcmp(buffer, "Catermelon") == 0) {
-	  printf("Play Cateremlon\n");
+	  printf("Play Catermelon\n");
 	} else if (strcmp(buffer, "Beard Cat") == 0) {
 	  printf("Play Beard Cat\n");
 	} else if (strcmp(buffer, "Tacocat") == 0) {
@@ -103,7 +114,18 @@ int main(int argc, char **argv) {
 	  printf("Play Hairy Potato Cat\n");
 	} else if (strcmp(buffer, "Rainbow Ralphing Cat") == 0) {
 	  printf("Play Rainbow Ralphing Cat\n");
-	} 
+	} else if (strcmp(buffer, "Dead") == 0) {
+	  printf("Player %d has died!", i);
+	  sprintf(buffer, "Player %d has died!", i);
+	  // Remove player from array and decrement num_players
+	  //int j;
+	  //for (j = num_players; j > 0;
+	  num_players -= 1;
+
+	  if (num_players == 1) {
+	    sprintf(buffer, "Player %d has won the game!", players[0]);
+	  }
+	}
 	for (j = 0; j < num_players; j++)
 	  if (j != i)
 	    write(players[j], buffer, sizeof(buffer));
@@ -120,7 +142,7 @@ int get_card_id(char * card){
     return 2;
   else if (strcmp(card, "Shuffle") == 0)
     return 3;
-  else if (strcmp(card, "Favor") == 0)
+  else if (strcmp(card, "Alter The Future") == 0)
     return 4;
   else if (strcmp(card, "See The Future") == 0)
     return 5;

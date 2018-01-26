@@ -12,7 +12,7 @@ char ** create_deck(int players, int * deck_size) {
 
   pos = add_cards(deck, "Attack", 4, pos);
   pos = add_cards(deck, "Skip", 4, pos);
-  pos = add_cards(deck, "Favor", 4, pos);
+  pos = add_cards(deck, "Alter The Future", 4, pos);
   pos = add_cards(deck, "Shuffle", 4, pos);
   pos = add_cards(deck, "See The Future", 5, pos);
   pos = add_cards(deck, "Tacocat", 4, pos);
@@ -85,20 +85,8 @@ void insert_card(char ** deck, int * size, char * card, int pos) {
   deck[pos] = card;
 }
 
-void skip() {
-
-}
-
 void defuse(char ** deck, int * size, int pos) {
   insert_card(deck, size, "Exploding Kitten", pos);
-}
-
-void attack() {
-
-}
-
-void favor() {
-
 }
 
 char * deck_to_string(char ** deck, int size) {
