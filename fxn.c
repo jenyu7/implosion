@@ -94,9 +94,9 @@ void insert_card(char ** deck, int * size, char * card, int pos) {
   deck[pos] = card;
 }
 
-void defuse(char ** deck, int * size, int pos) {
+/*void defuse(char ** deck, int * size, int pos) {
   insert_card(deck, size, "Exploding Kitten", pos);
-}
+  }*/
 
 char * deck_to_string(char ** deck, int size) {
   char * ret = calloc(size*17, sizeof(char));

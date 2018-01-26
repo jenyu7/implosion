@@ -67,11 +67,27 @@ int main(int argc, char **argv) {
           printf("cardid:%s\n", card_id);
           write(players[i], card_id, sizeof(card_id));
           sprintf(buffer, "Player %d drew a card.", i);
-	  if (strcmp(buffer, "Exploding Kitten") != 0) {
+	  turns[i] -= 1;
+	  /* if (strcmp(buffer, "Exploding Kitten") != 0) {
 	    turns[i] -= 1;
-	  }
+	    }*/
           
-        } else if (strcmp(buffer, "Attack") == 0) {
+        }
+	else if (strcmp(buffer, "Defuse") == 0){
+	  read(players[i], buffer, sizeof(buffer));
+	  write(players[i], buffer, sizeof(buffer));
+	  read(players[i], buffer, sizeof(buffer));
+	  int num = atoi(buffer);
+	  insert_card(deck, &deck_size, "Exploding Kitten", num);
+	}
+	else if (strcmp(buffer, "dead") == 0){
+	   memmove(&players[i], &players[i+1], ((--num_players) - i) * sizeof(int *));
+	   players[num_players] = 0;
+	   num_players --;
+	   sprintf(buffer, "%s", "The exploding kitten has killed you.");
+	   write(players[i], buffer, sizeof(buffer));
+	}
+	else if (strcmp(buffer, "Attack") == 0) {
           printf("Play Attack\n");
           turns[i] = 0;
 
