@@ -15,12 +15,13 @@ int main(int argc, char **argv) {
   }
 
   int listen_socket, i = 0, j;
-  int players[num_players], subservers[num_players], player_list[num_players];
+  int players[num_players], subservers[num_players], player_list[num_players], turns[num_players];
   listen_socket = server_setup();
 
   while (i < num_players) {
     players[i] = server_connect(listen_socket);
     player_list[i] = i;
+    turns[i] = 0;
     subservers[i] = fork();
     if (!subservers[i]) {
       close(players[i]);
@@ -48,22 +49,26 @@ int main(int argc, char **argv) {
   
   while(1) {
     for (i = 0; i < num_players; i++) {
-      write(players[i], ACK, sizeof(ACK));
-      read(players[i], buffer, sizeof(buffer));
-      if(strcmp(buffer, "draw") == 0)
-	{
-	  char card[50];
-	  strcpy(card, draw_card(deck, &deck_size));
-	  printf("%s\n", card);
-	  char card_id[8];
-	  sprintf(card_id, "%d", get_card_id(card));
-	  printf("cardid:%s\n", card_id);
-	  write(players[i], card_id, sizeof(card_id));
-	  sprintf(buffer, "Player %d drew a card.", i);
-	}
-      for (j = 0; j < num_players; j++)
-	if (j != i)
-	  write(players[j], buffer, sizeof(buffer));
+      turns[i] += 1;
+      while (turns[i]) {
+	write(players[i], ACK, sizeof(ACK));
+	read(players[i], buffer, sizeof(buffer));
+	if(strcmp(buffer, "draw") == 0)
+	  {
+	    char card[50];
+	    strcpy(card, draw_card(deck, &deck_size));
+	    printf("%s\n", card);
+	    char card_id[8];
+	    sprintf(card_id, "%d", get_card_id(card));
+	    printf("cardid:%s\n", card_id);
+	    write(players[i], card_id, sizeof(card_id));
+	    sprintf(buffer, "Player %d drew a card.", i);
+	    turns[i] -= 1;
+	  }
+	for (j = 0; j < num_players; j++)
+	  if (j != i)
+	    write(players[j], buffer, sizeof(buffer));
+      }
     }
   }
 }
