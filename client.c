@@ -45,8 +45,7 @@ int main(int argc, char **argv) {
 
   while (1) {
     printf("Waiting for your turn.\n");
-    while (1) {
-      read(server_socket, buffer, sizeof(buffer));
+    while (read(server_socket, buffer, sizeof(buffer))) {
       if (strcmp(buffer, ACK)) {
         printf("received: [%s]\n", buffer);
       }
@@ -83,9 +82,10 @@ int main(int argc, char **argv) {
       hand[size] = id;
       size++;
       printf("Card name:%s\n",get_card_name(catalog, id) );
-      char * name = get_card_name(catalog, id);
+      char * name = calloc(50, sizeof(char));
+      name = get_card_name(catalog, id);
       sprintf(buffer, "Drew the %s card.", name);
-
+      free(name);
       printf("%s\n", buffer);
 
       // Exploding Kitten Check
