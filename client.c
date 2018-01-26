@@ -91,10 +91,13 @@ int main(int argc, char **argv) {
         next = atoi(buffer);
         if(hand[next] == hand[pos]){
           strcpy(buffer, "double");
-
+	  write(server_socket, buffer, sizeof(buffer));
+	  memset(buffer, 0, BUFFER_SIZE);
         }
         else{
           printf("Sorry, but the cards don't match.\n");
+	  write(server_socket, buffer, sizeof(buffer));
+	  memset(buffer, 0, BUFFER_SIZE);
         }
       }
 
