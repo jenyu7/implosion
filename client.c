@@ -5,6 +5,7 @@ char * get_card_name(char ** catalog, int id);
 char ** create_catalog(int* size);
 int get_card_id(char * card);
 void print_hand(int hand[], int size, char ** catalog);
+void remove_card_from_hand(int hand[], int pos, int * size);
 
 char ** create_catalog(int* size){
   *size = 12;
@@ -46,7 +47,7 @@ int main(int argc, char **argv) {
   char ** catalog = create_catalog(&cat_size);
   int size = 0;
   int hand[51];
-  
+
   if (argc == 2)
     server_socket = client_setup( argv[1]);
   else
@@ -90,26 +91,30 @@ int main(int argc, char **argv) {
         fgets(buffer, sizeof(buffer), stdin);
         next = atoi(buffer);
         if(hand[next] == hand[pos]){
+          remove_card_from_hand(hand, next, &size);
           strcpy(buffer, "double");
-	  write(server_socket, buffer, sizeof(buffer));
-	  memset(buffer, 0, BUFFER_SIZE);
-	  read(server_socket, buffer, sizeof(buffer));
-	  printf("buffer:%s\n", buffer);
-	  int id = atoi(buffer);
-	  printf("here\n");
-	  printf("cardid:%d\n", id);
-	  hand[size] = id;
-	  size++;
-	  printf("Card name:%s\n",get_card_name(catalog, id) );
-	  char * name = calloc(50, sizeof(char));
-	  name = get_card_name(catalog, id);
-	  sprintf(buffer, "Drew the %s card.", name);
-	  printf("%s\n", buffer);
+          write(server_socket, buffer, sizeof(buffer));
+          memset(buffer, 0, BUFFER_SIZE);
+          read(server_socket, buffer, sizeof(buffer));
+          printf("buffer:%s\n", buffer);
+          int id = atoi(buffer);
+          printf("here\n");
+          printf("cardid:%d\n", id);
+          hand[size] = id;
+          size++;
+          printf("Card name:%s\n",get_card_name(catalog, id) );
+          char * name = calloc(50, sizeof(char));
+          name = get_card_name(catalog, id);
+          printf("Drew the %s card.", name);
+          memset(buffer, 0, BUFFER_SIZE);
+          strcpy(buffer, "drew");
+          write(server_socket, buffer, sizeof(buffer));
+          printf("%s\n", buffer);
         }
         else{
           printf("Sorry, but the cards don't match.\n");
-	  write(server_socket, buffer, sizeof(buffer));
-	  memset(buffer, 0, BUFFER_SIZE);
+          write(server_socket, buffer, sizeof(buffer));
+          memset(buffer, 0, BUFFER_SIZE);
         }
       }
 
@@ -123,8 +128,7 @@ int main(int argc, char **argv) {
       printf("buffer:%s\n", buffer);
       int id = atoi(buffer);
       printf("cardid:%d\n", id);
-      memmove(&hand[pos], &hand[pos+1], ((--size) - pos) * sizeof(int));
-      hand[size] = 0;
+      remove_card_from_hand(hand, pos, &size);
     }
     else {
       write(server_socket, buffer, sizeof(buffer));
@@ -149,7 +153,7 @@ int main(int argc, char **argv) {
         for (i = 0; i < size; i++) {
           if (strcmp(get_card_name(catalog, hand[i]), "Defuse") == 0) {
 
-	    printf("DEFUSE FOUND AT [%d]", i);
+            printf("DEFUSE FOUND AT [%d]", i);
             // Write defuse to server
             strcpy(buffer, "Defuse");
 
@@ -159,11 +163,10 @@ int main(int argc, char **argv) {
             printf("buffer:%s\n", buffer);
             int id = atoi(buffer);
             printf("cardid:%d\n", id);
-            memmove(&hand[i], &hand[i+1], ((--size) - i) * sizeof(int));
-	    hand[size] = 0;
+            remove_card_from_hand(hand, i, &size);
 
-	    printf("GET READY TO RUMBLE");
-	    
+            printf("GET READY TO RUMBLE");
+
             // Ask player where to put kitten
             printf("\nYou defused the exploding kitten. How many cards do you want to place the kitten under?\n");
             fgets(buffer, sizeof(buffer), stdin);
@@ -171,20 +174,26 @@ int main(int argc, char **argv) {
             write(server_socket, buffer, sizeof(buffer));
             memset(buffer, 0, BUFFER_SIZE);
 
-	    break;
+            break;
           }
 
-	  if (i == size-1) {
-	    // Check if player is dead
-	    printf("\n=========YOU DIED========\n");
-	    // Handle Death
-	    strcpy(buffer, "Dead");
-	    write(server_socket, buffer, sizeof(buffer));
-	    memset(buffer, 0, BUFFER_SIZE);
-	    exit(0);
-	  }
+          if (i == size-1) {
+            // Check if player is dead
+            printf("\n=========YOU DIED========\n");
+            // Handle Death
+            strcpy(buffer, "Dead");
+            write(server_socket, buffer, sizeof(buffer));
+            memset(buffer, 0, BUFFER_SIZE);
+            exit(0);
+          }
         }
       }
     }
   }
+}
+
+
+void remove_card_from_hand(int hand [], int pos, int * size) {
+  memmove(&hand[pos], &hand[pos+1], ((--*size) - pos) * sizeof(int));
+  hand[*size] = 0;
 }
