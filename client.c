@@ -147,7 +147,7 @@ int main(int argc, char **argv) {
             size--;
 
             // Ask player where to put kitten
-            printf("\nHow many cards do you want to place the kitten under?\n");
+            printf("\nYou defused the exploding kitten. How many cards do you want to place the kitten under?\n");
             fgets(buffer, sizeof(buffer), stdin);
             *strchr(buffer, '\n') = 0;
             write(server_socket, buffer, sizeof(buffer));

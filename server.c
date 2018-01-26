@@ -93,6 +93,10 @@ int main(int argc, char **argv) {
 	  sprintf(buffer, "Player %d shuffled the deck!", i);
 	} else if (strcmp(buffer, "Alter The Future") == 0) {
 	  printf("Play Alter The Future\n");
+	  alter_the_future(deck);
+	  strcpy(buffer, "You altered the future!");
+	  write(players[i], buffer, sizeof(buffer));
+	  sprintf(buffer, "Player %d altered the future!", i);
 	} else if (strcmp(buffer, "See The Future") == 0) {
 	  printf("Play See The Future\n");
 	  strcpy(buffer, see_the_future(deck));
@@ -101,6 +105,9 @@ int main(int argc, char **argv) {
 	} else if (strcmp(buffer, "Skip") == 0) {
 	  printf("Play Skip\n");
 	  turns[i] -= 1;
+	  strcpy(buffer, "You skipped your turn!");
+	  write(players[i], buffer, sizeof(buffer));
+	  sprintf(buffer, "Player %d skipped his turn!", i);
 	} else if (strcmp(buffer, "double") == 0) {
 	  printf("Played a double card combo!\n");
 	  char card[50];
