@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
   //Creates deck
   char ** deck = create_deck(num_players, &deck_size);
   //Shuffles deck
-  //shuffle(deck, deck_size);
+  shuffle(deck, deck_size);
   
   while(1) {
     for (i = 0; i < num_players; i++) {
@@ -84,13 +84,13 @@ int get_card_id(char * card){
     return 6;
   else if (strcmp(card, "Skip") == 0)
     return 7;
-  else if (strcmp(card, "Cattermelon") == 0)
+  else if (strcmp(card, "Catermelon") == 0)
     return 8;
   else if (strcmp(card, "Beard Cat") == 0)
     return 9;
   else if (strcmp(card, "Tacocat") == 0)
     return 10;
-  else if (strcmp(card, "Potato Cat") == 0)
+  else if (strcmp(card, "Hairy Potato Cat") == 0)
     return 11;
   else if (strcmp(card, "Rainbow Ralphing Cat") == 0)
     return 12;

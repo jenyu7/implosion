@@ -15,10 +15,10 @@ char ** create_catalog(int* size){
   catalog[4] = "See The Future";
   catalog[5] = "Reverse";
   catalog[6] = "Skip";
-  catalog[7] = "Cattermelon";
+  catalog[7] = "Catermelon";
   catalog[8] = "Beard Cat";
   catalog[9] = "Tacocat";
-  catalog[10] = "Potato Cat";
+  catalog[10] = "Hairy Potato Cat";
   catalog[11] = "Rainbow Ralphing Cat";
   return catalog;
 }
@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
     
     *strchr(buffer, '\n') = 0;
     write(server_socket, buffer, sizeof(buffer));
-
+    memset(buffer, 0, BUFFER_SIZE);
     read(server_socket, buffer, sizeof(buffer));
     printf("buffer:%s\n", buffer);
     int id = atoi(buffer);
