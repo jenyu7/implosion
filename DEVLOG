@@ -36,3 +36,30 @@ fixed issue with server binding
 marcusN -- 2018-01-25 16:28:55
 README
 
+jenY -- 2018-01-26 16:30:55
+drawing in deck
+numerical coding of cards
+
+marcusN -- 2018-01-26 01:25:55
+attack and skip cards
+
+adeeburR -- 2018-01-26 02:14:32
+removal of items from an array function
+
+marcusN -- 2018-01-26 02:56:21
+working on fixing hand functionality
+beginning to work on defuse
+
+jenY -- 2018-01-26 03:08:00
+functions to reduce issues of memory/segfaults
+beginning on double combos
+
+adeeburR -- 2018-01-26 03:54:17
+fixed double combo issue
+
+jenY -- 2018-01-26 04:15:13
+looping functionality: wrong commands are okay
+
+marcusN and jenY -- 2018-01-26 08:35:32
+defusal functionality 
+
