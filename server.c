@@ -78,16 +78,13 @@ int main(int argc, char **argv) {
 	} else if (strcmp(buffer, "Attack") == 0) {
 	  printf("Play Attack\n");
 	  turns[i] = 0;
-	  turns[i+1] += 1;
 
-	  // do some modulo stuff instead to get next player
-	  int p = i+1;
-	  if (p == num_players) {
-	    p = 0;
-	  }
-	  sprintf(buffer, "You attacked Player %d!", p);
+	  int index = (i + 1) % num_players;
+	  turns[index] += 1;
+	  
+	  sprintf(buffer, "You attacked Player %d!", index);
 	  write(players[i], buffer, sizeof(buffer));
-	  sprintf(buffer, "Player %d attacked Player %d", i, p);
+	  sprintf(buffer, "Player %d attacked Player %d", i, index);
 	} else if (strcmp(buffer, "Shuffle") == 0) {
 	  printf("Play Shuffle\n");
 	  shuffle(deck, deck_size);
