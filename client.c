@@ -91,7 +91,20 @@ int main(int argc, char **argv) {
         next = atoi(buffer);
         if(hand[next] == hand[pos]){
           strcpy(buffer, "double");
-
+	  write(server_socket, buffer, sizeof(buffer));
+	  memset(buffer, 0, BUFFER_SIZE);
+	  read(server_socket, buffer, sizeof(buffer));
+	  printf("buffer:%s\n", buffer);
+	  int id = atoi(buffer);
+	  printf("here\n");
+	  printf("cardid:%d\n", id);
+	  hand[size] = id;
+	  size++;
+	  printf("Card name:%s\n",get_card_name(catalog, id) );
+	  char * name = calloc(50, sizeof(char));
+	  name = get_card_name(catalog, id);
+	  sprintf(buffer, "Drew the %s card.", name);
+	  printf("%s\n", buffer);
         }
         else{
           printf("Sorry, but the cards don't match.\n");
