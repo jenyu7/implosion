@@ -92,6 +92,7 @@ int main(int argc, char **argv) {
         next = atoi(buffer);
         if(hand[next] == hand[pos]){
           remove_card_from_hand(hand, next, &size);
+          remove_card_from_hand(hand, pos, &size);
           strcpy(buffer, "double");
           write(server_socket, buffer, sizeof(buffer));
           memset(buffer, 0, BUFFER_SIZE);
@@ -117,18 +118,19 @@ int main(int argc, char **argv) {
           memset(buffer, 0, BUFFER_SIZE);
         }
       }
+      else {
+        //printf("\nCARD: %s\n", get_card_name(catalog,pos));
+        strcpy(buffer, get_card_name(catalog,hand[pos]));
 
-      //printf("\nCARD: %s\n", get_card_name(catalog,pos));
-      strcpy(buffer, get_card_name(catalog,hand[pos]));
 
-
-      write(server_socket, buffer, sizeof(buffer));
-      memset(buffer, 0, BUFFER_SIZE);
-      read(server_socket, buffer, sizeof(buffer));
-      printf("buffer:%s\n", buffer);
-      int id = atoi(buffer);
-      printf("cardid:%d\n", id);
-      remove_card_from_hand(hand, pos, &size);
+        write(server_socket, buffer, sizeof(buffer));
+        memset(buffer, 0, BUFFER_SIZE);
+        read(server_socket, buffer, sizeof(buffer));
+        printf("buffer:%s\n", buffer);
+        int id = atoi(buffer);
+        printf("cardid:%d\n", id);
+        remove_card_from_hand(hand, pos, &size);
+      }
     }
     else {
       write(server_socket, buffer, sizeof(buffer));
