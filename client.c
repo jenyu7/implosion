@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
   char buffer[BUFFER_SIZE];
   int cat_size;
   char ** catalog = create_catalog(&cat_size);
-  int size;
+  int size = 0;
   int hand[51];
 
   if (argc == 2)
@@ -42,6 +42,15 @@ int main(int argc, char **argv) {
     server_socket = client_setup( TEST_IP );
 
   printf("Waiting for all players to connect.\n");
+  read(server_socket, buffer, sizeof(buffer));
+  hand[size++] = 1;
+  char * cards = calloc(250, sizeof(char));
+  strcpy(cards, buffer);
+  int i;
+  for (i = 0; i < 4; i++) {
+    char * tmp = strsep(&cards, "-");
+    hand[size++] = atoi(tmp);
+  }
 
   while (1) {
     printf("Waiting for your turn.\n");
@@ -90,26 +99,26 @@ int main(int argc, char **argv) {
 
       // Exploding Kitten Check
       if (strcmp(name, "Exploding Kitten") == 0) {
-	// Check if player has a defuse
-	int i = 0;
-	for (i = 0; i < size; i++) {
-	  if (hand[i] == 0) {
-	    //strcpy(buffer, get_card_name(catalog,hand[pos]));
+  // Check if player has a defuse
+  int i = 0;
+  for (i = 0; i < size; i++) {
+    if (hand[i] == 0) {
+      //strcpy(buffer, get_card_name(catalog,hand[pos]));
 
-	    
-	    write(server_socket, buffer, sizeof(buffer));
-	    memset(buffer, 0, BUFFER_SIZE);
-	    read(server_socket, buffer, sizeof(buffer));
-	    printf("buffer:%s\n", buffer);
-	    int id = atoi(buffer);
-	    printf("cardid:%d\n", id);
-	    hand[size] = id;
-	    size--;
+      
+      write(server_socket, buffer, sizeof(buffer));
+      memset(buffer, 0, BUFFER_SIZE);
+      read(server_socket, buffer, sizeof(buffer));
+      printf("buffer:%s\n", buffer);
+      int id = atoi(buffer);
+      printf("cardid:%d\n", id);
+      hand[size] = id;
+      size--;
 
-	    
-	  }
-	}
-	printf("======YOU DIED====="); // WRITE TO SERVER
+      
+    }
+  }
+  printf("======YOU DIED====="); // WRITE TO SERVER
       }
     }
   }

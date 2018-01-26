@@ -33,19 +33,25 @@ int main(int argc, char **argv) {
   shutdown(listen_socket, SHUT_RD);
   char buffer[BUFFER_SIZE];
   
-  //setup players
-  for (i = 0; i < num_players; i++) {
-    snprintf(buffer, sizeof(buffer), "You are player #%d", i);
-    write(players[i], buffer, sizeof(buffer));
-    memset(buffer, 0, BUFFER_SIZE);
-  }
-  memset(buffer, 0, BUFFER_SIZE);
-  
   int deck_size;
   //Creates deck
   char ** deck = create_deck(num_players, &deck_size);
   //Shuffles deck
   shuffle(deck, deck_size);
+
+  //setup players
+  for (i = 0; i < num_players; i++) {
+    snprintf(buffer, sizeof(buffer), "%d-%d-%d-%d", get_card_id(draw_card(deck, &deck_size)), get_card_id(draw_card(deck, &deck_size)), get_card_id(draw_card(deck, &deck_size)), get_card_id(draw_card(deck, &deck_size)));
+    write(players[i], buffer, sizeof(buffer));
+    snprintf(buffer, sizeof(buffer), "You are player #%d", i);
+    write(players[i], buffer, sizeof(buffer));
+    memset(buffer, 0, BUFFER_SIZE);
+  }
+  add_kittens(deck, num_players, &deck_size);
+  shuffle(deck, deck_size);
+  
+  memset(buffer, 0, BUFFER_SIZE);
+  
   
   while(1) {
     for (i = 0; i < num_players; i++) {

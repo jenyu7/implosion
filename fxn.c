@@ -7,8 +7,8 @@ int add_cards(char ** deck, char * card_name, int amount, int pos){
 
 char ** create_deck(int players, int * deck_size) {
   int pos = 0;
-  *deck_size = 46;
-  char ** deck = calloc(*deck_size, sizeof(char *));
+  *deck_size = 47 - players;
+  char ** deck = calloc(51, sizeof(char *));
 
   pos = add_cards(deck, "Attack", 4, pos);
   pos = add_cards(deck, "Skip", 4, pos);
@@ -22,9 +22,14 @@ char ** create_deck(int players, int * deck_size) {
   pos = add_cards(deck, "Beard Cat", 4, pos);
   //pos = add_cards(deck, "Nope", 5, pos);
   pos = add_cards(deck, "Defuse", 6 - players, pos);
-  pos = add_cards(deck, "Exploding Kitten", players - 1, pos);
+  //pos = add_cards(deck, "Exploding Kitten", players - 1, pos);
 
   return deck;
+}
+
+void add_kittens(char ** deck, int players, int * deck_size){
+  add_cards(deck, "Exploding Kitten", players-1, *deck_size);
+  *deck_size = *deck_size + players -1;
 }
 
 void print_deck(char ** deck, int size) {
@@ -62,6 +67,11 @@ char * see_the_future(char ** deck) {
   }
   return buffer;
 }
+
+void alter_the_future(char ** deck) {
+  shuffle(deck, 3);
+}
+
 
 char * draw_card(char ** deck, int * size) {
   char * ret = deck[0];
