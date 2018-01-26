@@ -93,6 +93,7 @@ int main(int argc, char **argv) {
           strcpy(buffer, "double");
 	  write(server_socket, buffer, sizeof(buffer));
 	  memset(buffer, 0, BUFFER_SIZE);
+<<<<<<< HEAD
 	  read(server_socket, buffer, sizeof(buffer));
 	  printf("buffer:%s\n", buffer);
 	  int id = atoi(buffer);
@@ -105,9 +106,13 @@ int main(int argc, char **argv) {
 	  name = get_card_name(catalog, id);
 	  sprintf(buffer, "Drew the %s card.", name);
 	  printf("%s\n", buffer);
+=======
+>>>>>>> 7b262096238175c59dfe42fd1cba225b3e8deff9
         }
         else{
           printf("Sorry, but the cards don't match.\n");
+	  write(server_socket, buffer, sizeof(buffer));
+	  memset(buffer, 0, BUFFER_SIZE);
         }
       }
 
