@@ -71,14 +71,6 @@ int main(int argc, char **argv) {
 	    turns[i] -= 1;
 	  }
           
-        } else if (strcmp(buffer, "Defuse") == 0) {
-          printf("Play Defuse\n");
-          sprintf(buffer, "Player %d defused the exploding kitten!", i);
-	  write(players[i], buffer, sizeof(buffer));
-	  
-          //strcpy(buffer, "How many cards do you want to place the kitten under?");
-          read(players[i], buffer, sizeof(buffer));
-	  turns[i] = 0;
         } else if (strcmp(buffer, "Attack") == 0) {
           printf("Play Attack\n");
           turns[i] = 0;
@@ -175,4 +167,13 @@ int get_card_id(char * card){
 /*
   sprintf(buffer, "%d", deck_size);
   write(players[i], buffer, sizeof(buffer));
+ else if (strcmp(buffer, "Defuse") == 0) {
+          printf("Play Defuse\n");
+          sprintf(buffer, "Player %d defused the exploding kitten!", i);
+	  write(players[i], buffer, sizeof(buffer));
+	  
+          //strcpy(buffer, "How many cards do you want to place the kitten under?");
+          read(players[i], buffer, sizeof(buffer));
+	  turns[i] = 0;
+        }
 */

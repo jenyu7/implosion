@@ -147,8 +147,29 @@ int main(int argc, char **argv) {
       name = get_card_name(catalog, id);
       sprintf(buffer, "Drew the %s card.", name);
       printf("%s\n", buffer);
+          if (i == size-1) {
+            // Check if player is dead
+            printf("\n=========YOU DIED========\n");
+            // Handle Death
+            strcpy(buffer, "Dead");
+            write(server_socket, buffer, sizeof(buffer));
+            memset(buffer, 0, BUFFER_SIZE);
+            exit(0);
+          }
+        }
+      }
+    }
+  }
+}
 
-      // Exploding Kitten Check
+
+void remove_card_from_hand(int hand [], int pos, int * size) {
+  memmove(&hand[pos], &hand[pos+1], ((--*size) - pos) * sizeof(int));
+  hand[*size] = 0;
+}
+
+/*
+ // Exploding Kitten Check
       if (strcmp(name, "Exploding Kitten") == 0) {
         // Check if player has a defuse
         int i;
@@ -178,24 +199,4 @@ int main(int argc, char **argv) {
 
             break;
           }
-
-          if (i == size-1) {
-            // Check if player is dead
-            printf("\n=========YOU DIED========\n");
-            // Handle Death
-            strcpy(buffer, "Dead");
-            write(server_socket, buffer, sizeof(buffer));
-            memset(buffer, 0, BUFFER_SIZE);
-            exit(0);
-          }
-        }
-      }
-    }
-  }
-}
-
-
-void remove_card_from_hand(int hand [], int pos, int * size) {
-  memmove(&hand[pos], &hand[pos+1], ((--*size) - pos) * sizeof(int));
-  hand[*size] = 0;
-}
+ */
