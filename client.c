@@ -94,6 +94,7 @@ int main(int argc, char **argv) {
     hand[size++] = atoi(tmp);
   }
 
+  printf("\n\nWelcome to Exploding Kittens!\nView your hand by typing 'print'\nType 'draw' to draw a card and end your turn.\nSelect action cards to play by specifying the index (i.e. 0).\nYour goal is to be the last human alive by using your action cards to survive.\n\n");
   while (1) {
     printf("Waiting for your turn.\n");
     while (read(server_socket, buffer, sizeof(buffer))) {
