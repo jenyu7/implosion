@@ -53,18 +53,41 @@ int main(int argc, char **argv) {
       while (turns[i]) {
 	write(players[i], ACK, sizeof(ACK));
 	read(players[i], buffer, sizeof(buffer));
-	if(strcmp(buffer, "draw") == 0)
-	  {
-	    char card[50];
-	    strcpy(card, draw_card(deck, &deck_size));
-	    printf("%s\n", card);
-	    char card_id[8];
-	    sprintf(card_id, "%d", get_card_id(card));
-	    printf("cardid:%s\n", card_id);
-	    write(players[i], card_id, sizeof(card_id));
-	    sprintf(buffer, "Player %d drew a card.", i);
-	    turns[i] -= 1;
-	  }
+	if(strcmp(buffer, "draw") == 0) {
+	  char card[50];
+	  strcpy(card, draw_card(deck, &deck_size));
+	  printf("%s\n", card);
+	  char card_id[8];
+	  sprintf(card_id, "%d", get_card_id(card));
+	  printf("cardid:%s\n", card_id);
+	  write(players[i], card_id, sizeof(card_id));
+	  sprintf(buffer, "Player %d drew a card.", i);
+	} else if (strcmp(buffer, "Defuse") == 0) {
+	  printf("Play Defuse\n");
+	} else if (strcmp(buffer, "Attack") == 0) {
+	  printf("Play Attack\n");
+	} else if (strcmp(buffer, "Shuffle") == 0) {
+	  printf("Play Shuffle\n");
+	} else if (strcmp(buffer, "Favor") == 0) {
+	  printf("Play Favor\n");
+	} else if (strcmp(buffer, "See The Future") == 0) {
+	  printf("Play See The Future\n");
+	} else if (strcmp(buffer, "Skip") == 0) {
+	  printf("Play Skip\n");
+	} else if (strcmp(buffer, "Catermelon") == 0) {
+	  printf("Play Cateremlon\n");
+	} else if (strcmp(buffer, "Beard Cat") == 0) {
+	  printf("Play Beard Cat\n");
+	} else if (strcmp(buffer, "Tacocat") == 0) {
+	  printf("Play Tacocat\n");
+	} else if (strcmp(buffer, "Hairy Potato Cat") == 0) {
+	  printf("Play Hairy Potato Cat\n");
+	} else if (strcmp(buffer, "Rainbow Ralphing Cat") == 0) {
+	  printf("Play Rainbow Ralphing Cat\n");
+	} else if (strcmp(buffer, "Exploding Kitten") == 0) {
+	  printf("EXPLODING KITTEN");
+	}
+	turns[i] -= 1;
 	for (j = 0; j < num_players; j++)
 	  if (j != i)
 	    write(players[j], buffer, sizeof(buffer));
@@ -85,19 +108,19 @@ int get_card_id(char * card){
     return 4;
   else if (strcmp(card, "See The Future") == 0)
     return 5;
-  else if (strcmp(card, "Reverse") == 0)
-    return 6;
   else if (strcmp(card, "Skip") == 0)
-    return 7;
+    return 6;
   else if (strcmp(card, "Catermelon") == 0)
-    return 8;
+    return 7;
   else if (strcmp(card, "Beard Cat") == 0)
-    return 9;
+    return 8;
   else if (strcmp(card, "Tacocat") == 0)
-    return 10;
+    return 9;
   else if (strcmp(card, "Hairy Potato Cat") == 0)
-    return 11;
+    return 10;
   else if (strcmp(card, "Rainbow Ralphing Cat") == 0)
+    return 11;
+  else if (strcmp(card, "Exploding Kitten") == 0)
     return 12;
   else
     return 0;
