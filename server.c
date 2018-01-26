@@ -67,13 +67,17 @@ int main(int argc, char **argv) {
           printf("cardid:%s\n", card_id);
           write(players[i], card_id, sizeof(card_id));
           sprintf(buffer, "Player %d drew a card.", i);
-          turns[i] -= 1;
+	  if (strcmp(buffer, "Exploding Kitten") != 0) {
+	    turns[i] -= 1;
+	  }
+          
         } else if (strcmp(buffer, "Defuse") == 0) {
           printf("Play Defuse\n");
           sprintf(buffer, "Player %d defused the exploding kitten!", i);
 
           strcpy(buffer, "How many cards do you want to place the kitten under?");
           read(players[i], buffer, sizeof(buffer));
+	  turns[i] = 0;
         } else if (strcmp(buffer, "Attack") == 0) {
           printf("Play Attack\n");
           turns[i] = 0;

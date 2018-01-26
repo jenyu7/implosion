@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
   char ** catalog = create_catalog(&cat_size);
   int size = 0;
   int hand[51];
-
+  
   if (argc == 2)
     server_socket = client_setup( argv[1]);
   else
@@ -145,12 +145,13 @@ int main(int argc, char **argv) {
       // Exploding Kitten Check
       if (strcmp(name, "Exploding Kitten") == 0) {
         // Check if player has a defuse
-        int i = 0;
+        int i;
         for (i = 0; i < size; i++) {
           if (strcmp(get_card_name(catalog, hand[i]), "Defuse") == 0) {
 
+	    printf("DEFUSE FOUND AT [%d]", i);
             // Write defuse to server
-            strcpy(buffer, get_card_name(catalog,hand[i]));
+            strcpy(buffer, "Defuse");
 
             write(server_socket, buffer, sizeof(buffer));
             memset(buffer, 0, BUFFER_SIZE);
@@ -158,23 +159,31 @@ int main(int argc, char **argv) {
             printf("buffer:%s\n", buffer);
             int id = atoi(buffer);
             printf("cardid:%d\n", id);
-            hand[size] = id;
-            size--;
+            memmove(&hand[i], &hand[i+1], ((--size) - i) * sizeof(int));
+	    hand[size] = 0;
 
+	    printf("GET READY TO RUMBLE");
+	    
             // Ask player where to put kitten
             printf("\nYou defused the exploding kitten. How many cards do you want to place the kitten under?\n");
             fgets(buffer, sizeof(buffer), stdin);
             *strchr(buffer, '\n') = 0;
             write(server_socket, buffer, sizeof(buffer));
             memset(buffer, 0, BUFFER_SIZE);
+
+	    break;
           }
+
+	  if (i == size-1) {
+	    // Check if player is dead
+	    printf("\n=========YOU DIED========\n");
+	    // Handle Death
+	    strcpy(buffer, "Dead");
+	    write(server_socket, buffer, sizeof(buffer));
+	    memset(buffer, 0, BUFFER_SIZE);
+	    exit(0);
+	  }
         }
-        printf("\n=========YOU DIED========\n");
-        // Handle Death
-        strcpy(buffer, "Dead");
-        write(server_socket, buffer, sizeof(buffer));
-        memset(buffer, 0, BUFFER_SIZE);
-        exit(0);
       }
     }
   }
